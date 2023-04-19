@@ -1,9 +1,20 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:gender_picker/source/enums.dart';
 import 'package:gender_picker/source/gender_picker.dart';
 import 'package:todo_list/models/user.dart';
+import 'package:todo_list/screen/test.dart';
 import 'package:todo_list/services/rest.dart';
+
+import '../widgets/appbar.dart';
+
+const List<String> list = <String>[
+  'Body builder',
+  'Calisthenics',
+  'Comprehensive'
+];
 
 class CustomerRegisterScreen extends StatefulWidget {
   const CustomerRegisterScreen({Key? key}) : super(key: key);
@@ -12,42 +23,41 @@ class CustomerRegisterScreen extends StatefulWidget {
   State<CustomerRegisterScreen> createState() => _CustomerRegisterScreenState();
 }
 
+Gender _selectedGender = Gender.Male;
+
 class _CustomerRegisterScreenState extends State<CustomerRegisterScreen> {
+  String? typeOfTraining;
+  final _formKey = GlobalKey<FormState>();
+  DataService service = DataService();
+  String insertedName = "";
+  String insertedEmail = "";
+  String gender = "male";
+  int age = 0;
+  double height = 0;
+  double weight = 0;
+  String insertedPassword = "";
+  String insertedPasswordConfirmation = "";
   @override
   Widget build(BuildContext context) {
-    DataService service = DataService();
-    String insertedName = "";
-    String insertedEmail = "";
-    int age;
-    String gender;
-    String typeOfTraining;
-    double weight;
-    double height;
-    String insertedPassword = "";
-    String insertedPasswordConfirmation = "";
-    final logo = Hero(
-      tag: 'hero',
-      child: CircleAvatar(
-        backgroundColor: Colors.transparent,
-        radius: 48.0,
-        // child: Image.asset('assets/logo.png'),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              "Gym",
-              style: TextStyle(color: Colors.deepOrange, fontSize: 60),
-            ),
-            Text(
-              "Coach",
-              style: TextStyle(color: Colors.black, fontSize: 60),
-            ),
-          ],
-        ),
-      ),
-    );
+    final ageController = TextEditingController();
+    final heightController = TextEditingController();
+    final weightController = TextEditingController();
+
+    @override
+    void dispose() {
+      ageController.dispose();
+      heightController.dispose();
+      weightController.dispose();
+      super.dispose();
+    }
 
     final name = TextFormField(
+      validator: (value) {
+        if (value == null || value.isEmpty) {
+          return 'Enter your name';
+        }
+        return null;
+      },
       keyboardType: TextInputType.name,
       autofocus: false,
       decoration: InputDecoration(
@@ -60,6 +70,12 @@ class _CustomerRegisterScreenState extends State<CustomerRegisterScreen> {
     );
 
     final email = TextFormField(
+      validator: (value) {
+        if (value == null || value.isEmpty) {
+          return 'Enter your email';
+        }
+        return null;
+      },
       keyboardType: TextInputType.emailAddress,
       autofocus: false,
       decoration: InputDecoration(
@@ -72,6 +88,12 @@ class _CustomerRegisterScreenState extends State<CustomerRegisterScreen> {
     );
 
     final password = TextFormField(
+      validator: (value) {
+        if (value == null || value.isEmpty) {
+          return 'Enter your password';
+        }
+        return null;
+      },
       autofocus: false,
       obscureText: true,
       decoration: InputDecoration(
@@ -80,10 +102,19 @@ class _CustomerRegisterScreenState extends State<CustomerRegisterScreen> {
         contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(32.0)),
       ),
-      onChanged: ((value) => insertedPassword = value),
+      onChanged: ((value) {
+        insertedPassword = value;
+        print(value);
+      }),
     );
 
     final passwordConfirmation = TextFormField(
+      validator: (value) {
+        if (value == null || value.isEmpty) {
+          return 'Confirm your password';
+        }
+        return null;
+      },
       autofocus: false,
       obscureText: true,
       decoration: InputDecoration(
@@ -104,6 +135,7 @@ class _CustomerRegisterScreenState extends State<CustomerRegisterScreen> {
         },
       ),
     );
+
     final registerButton = Padding(
       padding: EdgeInsets.symmetric(vertical: 16.0),
       child: RaisedButton(
@@ -111,16 +143,37 @@ class _CustomerRegisterScreenState extends State<CustomerRegisterScreen> {
           borderRadius: BorderRadius.circular(24),
         ),
         onPressed: () async {
-          User user = await service.register(
-              name: insertedName,
-              email: insertedEmail,
-              password: insertedPassword,
-              password_confirmation: insertedPasswordConfirmation);
-          if (user.email != "") {
-            Navigator.of(context).pushNamed('/login');
-          } else {
-            ScaffoldMessenger.of(context).showSnackBar(snackBar);
-            print("wrong credentials");
+          // Validate returns true if the form is valid, or false otherwise.
+          if (_formKey.currentState!.validate()) {
+            // If the form is valid, display a snackbar. In the real world,
+            // you'd often call a server or save the information in a database.
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('Processing Data')),
+            );
+            print(insertedName);
+            print(insertedEmail);
+            print(gender);
+            print(age);
+            print(height);
+            print(weight);
+            print(typeOfTraining);
+            print(insertedPassword);
+            User user = await service.register(
+                name: insertedName,
+                email: insertedEmail,
+                gender: gender,
+                age: age,
+                height: height,
+                weight: weight,
+                typeOfTraining: typeOfTraining,
+                password: insertedPassword,
+                password_confirmation: insertedPasswordConfirmation);
+            if (user.email != "") {
+              Navigator.of(context).pushNamed('/login');
+            } else {
+              ScaffoldMessenger.of(context).showSnackBar(snackBar);
+              print("wrong credentials");
+            }
           }
         },
         padding: EdgeInsets.all(12),
@@ -130,47 +183,212 @@ class _CustomerRegisterScreenState extends State<CustomerRegisterScreen> {
     );
 
     return Scaffold(
+      appBar: CustomAppBar(context),
       backgroundColor: Colors.white,
       body: Center(
-        child: ListView(
-          shrinkWrap: true,
-          padding: EdgeInsets.only(left: 24.0, right: 24.0),
-          children: <Widget>[
-            logo,
-            SizedBox(height: 48.0),
-            name,
-            SizedBox(height: 8.0),
-            email,
-            SizedBox(height: 8.0),
-            GenderPickerWithImage(
-              showOtherGender: false,
-              verticalAlignedText: false,
-              selectedGender: Gender.Male,
-              selectedGenderTextStyle: TextStyle(
-                  color: Colors.deepOrange, fontWeight: FontWeight.bold),
-              unSelectedGenderTextStyle: TextStyle(
-                  color: Colors.white, fontWeight: FontWeight.normal),
-              onChanged: (gender2) {
-                gender = gender2.toString();
-                gender = gender.substring(7);
-                gender = gender.toLowerCase();
-                print(gender);
-              },
-              equallyAligned: false,
-              animationDuration: Duration(milliseconds: 300),
-              isCircular: true,
-              // default : true,
-              opacityOfGradient: 0.4,
-              padding: const EdgeInsets.all(0),
-              size: 60, //default : 40
-            ),
-            SizedBox(height: 10.0),
-            password,
-            SizedBox(height: 8.0),
-            passwordConfirmation,
-            SizedBox(height: 24.0),
-            registerButton,
-          ],
+        child: Form(
+          key: _formKey,
+          child: ListView(
+            shrinkWrap: true,
+            padding: EdgeInsets.only(left: 24.0, right: 24.0),
+            children: <Widget>[
+              name,
+              SizedBox(height: 8.0),
+              email,
+              SizedBox(height: 8.0),
+
+              // Gender
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: <Widget>[
+                  Text(
+                    'Gender:',
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  ),
+                  SizedBox(width: 10),
+                  Row(
+                    children: <Widget>[
+                      Radio(
+                        value: Gender.Male,
+                        groupValue: _selectedGender,
+                        onChanged: (value) {
+                          setState(() {
+                            _selectedGender = Gender.Male;
+                            gender = Gender.Male.toString()
+                                .substring(7)
+                                .toLowerCase();
+                            print(gender);
+                          });
+                        },
+                      ),
+                      Text('Male'),
+                    ],
+                  ),
+                  Row(
+                    children: <Widget>[
+                      Radio(
+                        value: Gender.Female,
+                        groupValue: _selectedGender,
+                        onChanged: (value) {
+                          
+                          _selectedGender = Gender.Female;
+                          print(Gender.Female.toString()
+                              .substring(7)
+                              .toLowerCase());
+                          gender = Gender.Female.toString()
+                              .substring(7)
+                              .toLowerCase();
+                          print(gender);
+                          setState(() {
+                            
+                          });
+                        },
+                      ),
+                      Text('Female'),
+                    ],
+                  ),
+                ],
+              ),
+
+              // age
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text("Age:"),
+                  SizedBox(
+                    width: 20,
+                  ),
+                  Container(
+                    width: 100,
+                    child: TextFormField(
+                      controller: ageController,
+                      keyboardType:
+                          TextInputType.numberWithOptions(decimal: false),
+                      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                      decoration: InputDecoration(
+                          // labelText: 'Enter your age',
+                          ),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Enter your age';
+                        }
+                        return null;
+                      },
+                      onChanged: (value) {
+                        if (value != null && value.isNotEmpty)
+                          age = int.parse(value);
+                        else
+                          age = 0;
+                      },
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              // height and weight
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text("Height:"),
+                  SizedBox(
+                    width: 5,
+                  ),
+                  Container(
+                    width: 100,
+                    child: TextFormField(
+                      controller: heightController,
+                      keyboardType:
+                          TextInputType.numberWithOptions(decimal: true),
+                      decoration: InputDecoration(),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Enter your height';
+                        }
+                        return null;
+                      },
+                      onChanged: (value) {
+                        if (value != null && value.isNotEmpty)
+                          height = double.parse(value);
+                        else
+                          height = 0;
+                      },
+                    ),
+                  ),
+                  SizedBox(
+                    width: 20,
+                  ),
+                  // weight
+                  Text("Weight:"),
+                  SizedBox(
+                    width: 5,
+                  ),
+                  Container(
+                    width: 100,
+                    child: TextFormField(
+                      controller: weightController,
+                      keyboardType:
+                          TextInputType.numberWithOptions(decimal: true),
+                      decoration: InputDecoration(),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Enter your weight';
+                        }
+                        return null;
+                      },
+                      onChanged: (value) {
+                        if (value != null && value.isNotEmpty)
+                          weight = double.parse(value);
+                        else
+                          weight = 0;
+                      },
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 20.0),
+              // Type of training
+
+              DropdownButtonFormField<String>(
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Enter type of training';
+                  }
+                  return null;
+                },
+                hint: Text("Type of training"),
+                value: typeOfTraining,
+                icon: const Icon(Icons.arrow_downward),
+                elevation: 16,
+                style: const TextStyle(color: Colors.deepOrange),
+                // underline: Container(
+                //   height: 2,
+                //   color: Colors.deepOrangeAccent,
+                // ),
+                onChanged: (String? value) {
+                  // This is called when the user selects an item.
+                  // setState(() {
+                  typeOfTraining = value!;
+                  // });
+                },
+                items: list.map<DropdownMenuItem<String>>((String value) {
+                  return DropdownMenuItem<String>(
+                    value: value,
+                    child: Text(value),
+                  );
+                }).toList(),
+              ),
+
+              SizedBox(height: 20.0),
+              password,
+              SizedBox(height: 8.0),
+              passwordConfirmation,
+              SizedBox(height: 24.0),
+              registerButton,
+            ],
+          ),
         ),
       ),
     );

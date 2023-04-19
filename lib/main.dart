@@ -7,6 +7,7 @@ import 'package:todo_list/models/user.dart';
 import 'package:todo_list/provider/user_provider.dart';
 import 'package:todo_list/screen/login.dart';
 import 'package:todo_list/screen/customer_register.dart';
+import 'package:todo_list/screen/test.dart';
 import 'package:todo_list/widgets/create_bottom_sheet.dart';
 import 'package:todo_list/widgets/edit_bottom_sheet.dart';
 import 'package:todo_list/widgets/snackbar.dart';
@@ -36,6 +37,7 @@ class MyApp extends StatelessWidget {
       routes: {
         // When navigating to the "/" route, build the FirstScreen widget.
         '/login': (context) => LoginScreen(),
+        '/test': (context) => DropdownButtonApp(),
         // When navigating to the "/second" route, build the SecondScreen widget.
         '/home': (context) => const MyHomePage(
               title: 'Gym coach',

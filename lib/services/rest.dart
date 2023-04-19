@@ -177,26 +177,66 @@ class DataService {
         print(parsed.email);
         return parsed;
       } else {
-        return User(email: "", name: "", token: "");
+        return User(
+            email: "",
+            name: "",
+            gender: "",
+            age: 0,
+            height: 0,
+            weight: 0,
+            typeOfTraining: "",
+            token: "");
       }
     } on DioError catch (e) {
-      return User(email: "", name: "", token: "");
+      return User(
+          email: "",
+          name: "",
+          gender: "",
+          age: 0,
+          height: 0,
+          weight: 0,
+          typeOfTraining: "",
+          token: "");
     }
   }
 
-  Future<User> register({name, email, password, password_confirmation}) async {
+  Future<User> register(
+      {name,
+      email,
+      gender,
+      age,
+      height,
+      weight,
+      typeOfTraining,
+      password,
+      password_confirmation}) async {
     var body = FormData.fromMap({
       "name": name,
       "email": email,
+      "gender": gender,
+      "age": age,
+      "height": height,
+      "weight": weight,
+      "typeOfTraining": typeOfTraining,
       "password": password,
       "password_confirmation": password_confirmation
     });
     try {
       final response = await Dio().post('$baseUrl/register', data: body);
+      print(response);
       final parsed = User.fromJson(response.data);
       return parsed;
     } on DioError catch (e) {
-      return User(email: "", name: "", token: "");
+      print(e);
+      return User(
+          email: "",
+          name: "",
+          gender: "",
+          age: 0,
+          height: 0,
+          weight: 0,
+          typeOfTraining: "",
+          token: "");
     }
   }
 
