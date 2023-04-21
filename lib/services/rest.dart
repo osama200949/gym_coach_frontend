@@ -8,6 +8,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 import 'package:todo_list/models/carousel.dart';
+import 'package:todo_list/models/coach.dart';
 import 'package:todo_list/models/product.dart';
 import 'package:todo_list/models/user.dart';
 
@@ -121,6 +122,14 @@ class DataService {
     return list;
   }
 
+  Future<List<Coach>> getCoaches({required String token, required String typeOfTraining}) async {
+    final listJson = await get("coaches/$typeOfTraining", token);
+    final list = (listJson as List)
+        .map((itemJson) => Coach.fromJson(itemJson))
+        .toList();
+    return list;
+  }
+
   Future<Carousel> createCarousel(
       {required Carousel carousel, required String token}) async {
     final json = await post('carousels', data: carousel, token: token);
@@ -198,6 +207,50 @@ class DataService {
           typeOfTraining: "",
           token: "");
     }
+  }
+
+  Future<Coach> registerCoach(
+      {image,
+      name,
+      email,
+      gender,
+      age,
+      typeOfTraining,
+      password,
+      password_confirmation}) async {
+    String filepath = image as String;
+    String fileName = filepath.split('/login').last;
+    print(filepath);
+    var body = FormData.fromMap({
+      "image": await MultipartFile.fromFile(filepath, filename: fileName),
+      "name": name,
+      "email": email,
+      "gender": gender,
+      "age": age,
+      "typeOfTraining": typeOfTraining,
+      "password": password,
+      "password_confirmation": password_confirmation
+    });
+     try {
+      final response = await Dio().post('$baseUrl/registerCoach', data: body);
+      print(response);
+      final parsed = Coach.fromJson(response.data);
+      return parsed;
+    } on DioError catch (e) {
+      print(e);
+      return Coach(
+          image: "",
+          name: "",
+          email: "",
+          gender: "",
+          age: 0,
+          typeOfTraining: "",
+          token: "");
+    }
+
+  
+
+
   }
 
   Future<User> register(

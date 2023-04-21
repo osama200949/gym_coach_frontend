@@ -5,6 +5,7 @@ import 'package:todo_list/models/carousel.dart';
 import 'package:todo_list/models/product.dart';
 import 'package:todo_list/models/user.dart';
 import 'package:todo_list/provider/user_provider.dart';
+import 'package:todo_list/screen/coach_register.dart';
 import 'package:todo_list/screen/customer_home.dart';
 import 'package:todo_list/screen/customer_profile.dart';
 import 'package:todo_list/screen/login.dart';
@@ -35,18 +36,19 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.deepOrange,
       ),
-      initialRoute: '/customerHomePage',
+      initialRoute: '/login',
       routes: {
         // When navigating to the "/" route, build the FirstScreen widget.
         '/login': (context) => LoginScreen(),
-        '/test': (context) => DropdownButtonApp(),
+        // '/test': (context) => DropdownButtonApp(),
         // When navigating to the "/second" route, build the SecondScreen widget.
-        '/home': (context) => const MyHomePage(
-              title: 'Gym coach',
-            ),
+        // '/home': (context) => const MyHomePage(
+        //       title: 'Gym coach',
+        //     ),
         '/customerHomePage': (context) => const CustomerHomeScreen(),
         '/customerProfilePage': (context) => const CustomerProfileScreen(),
         '/customerRegister': (context) => const CustomerRegisterScreen(),
+        '/coachRegister': (context) => const CoachRegistrationScreen(),
       },
     );
   }

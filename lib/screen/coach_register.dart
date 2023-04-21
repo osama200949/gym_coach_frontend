@@ -1,48 +1,87 @@
+import 'dart:io';
+
+import 'package:file_picker/file_picker.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:gender_picker/source/enums.dart';
+import 'package:gender_picker/source/gender_picker.dart';
+import 'package:todo_list/models/coach.dart';
 import 'package:todo_list/models/user.dart';
+import 'package:todo_list/screen/test.dart';
 import 'package:todo_list/services/rest.dart';
 
-class CoachRegisterScreen extends StatefulWidget {
-  const CoachRegisterScreen({Key? key}) : super(key: key);
+import '../widgets/appbar.dart';
+
+const List<String> list = <String>[
+  'Body builder',
+  'Calisthenics',
+  'Comprehensive'
+];
+
+class CoachRegistrationScreen extends StatefulWidget {
+  const CoachRegistrationScreen({Key? key}) : super(key: key);
 
   @override
-  State<CoachRegisterScreen> createState() => _CoachRegisterScreenState();
+  State<CoachRegistrationScreen> createState() =>
+      _CoachRegistrationScreenState();
 }
 
-class _CoachRegisterScreenState extends State<CoachRegisterScreen> {
+Gender _selectedGender = Gender.Male;
+
+class _CoachRegistrationScreenState extends State<CoachRegistrationScreen> {
+  String? typeOfTraining;
+  final _formKey = GlobalKey<FormState>();
+  DataService service = DataService();
+  String insertedName = "";
+  String insertedEmail = "";
+  String gender = "male";
+  int age = 0;
+  double height = 0;
+  double weight = 0;
+  String insertedPassword = "";
+  String insertedPasswordConfirmation = "";
+  File? _image;
+  String _defaultImage = "assets/images/profile.png";
+
+  Future pickImage() async {
+    FilePickerResult? result = await FilePicker.platform.pickFiles(
+      type: FileType.image,
+      allowMultiple: false,
+    );
+    if (result != null) {
+      setState(() {
+        _image = File(result.files.single.path!);
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    DataService service = DataService();
-    String insertedName = "";
-    String insertedEmail = "";
-    String insertedPassword = "";
-    String insertedPasswordConfirmation = "";
-    final logo = Hero(
-      tag: 'hero',
-      child: CircleAvatar(
-        backgroundColor: Colors.transparent,
-        radius: 48.0,
-        // child: Image.asset('assets/logo.png'),
-         child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              "H",
-              style: TextStyle(color: Colors.blue, fontSize: 70),
-            ),
-            Text(
-              "YAPE",
-              style: TextStyle(color: Colors.black, fontSize: 70),
-            ),
-          ],
-        ),
-      ),
-    );
+    final ageController = TextEditingController();
+    final heightController = TextEditingController();
+    final weightController = TextEditingController();
+
+    @override
+    void dispose() {
+      ageController.dispose();
+      heightController.dispose();
+      weightController.dispose();
+      super.dispose();
+    }
 
     final name = TextFormField(
+      validator: (value) {
+        if (value == null || value.isEmpty) {
+          return 'Enter your name';
+        }
+        return null;
+      },
       keyboardType: TextInputType.name,
       autofocus: false,
       decoration: InputDecoration(
+        prefixIcon: Icon(FontAwesomeIcons.user),
         hintText: 'Name',
         contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(32.0)),
@@ -51,9 +90,16 @@ class _CoachRegisterScreenState extends State<CoachRegisterScreen> {
     );
 
     final email = TextFormField(
+      validator: (value) {
+        if (value == null || value.isEmpty) {
+          return 'Enter your email';
+        }
+        return null;
+      },
       keyboardType: TextInputType.emailAddress,
       autofocus: false,
       decoration: InputDecoration(
+        prefixIcon: Icon(Icons.mail_outline),
         hintText: 'Email',
         contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(32.0)),
@@ -62,20 +108,37 @@ class _CoachRegisterScreenState extends State<CoachRegisterScreen> {
     );
 
     final password = TextFormField(
+      validator: (value) {
+        if (value == null || value.isEmpty) {
+          return 'Enter your password';
+        }
+        return null;
+      },
       autofocus: false,
       obscureText: true,
       decoration: InputDecoration(
+        prefixIcon: Icon(Icons.lock_outline),
         hintText: 'Password',
         contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(32.0)),
       ),
-      onChanged: ((value) => insertedPassword = value),
+      onChanged: ((value) {
+        insertedPassword = value;
+        print(value);
+      }),
     );
 
     final passwordConfirmation = TextFormField(
+      validator: (value) {
+        if (value == null || value.isEmpty) {
+          return 'Confirm your password';
+        }
+        return null;
+      },
       autofocus: false,
       obscureText: true,
       decoration: InputDecoration(
+        prefixIcon: Icon(Icons.lock_outline),
         hintText: 'Password confirmation',
         contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(32.0)),
@@ -92,50 +155,206 @@ class _CoachRegisterScreenState extends State<CoachRegisterScreen> {
         },
       ),
     );
-    final loginButton = Padding(
+
+    final registerButton = Padding(
       padding: EdgeInsets.symmetric(vertical: 16.0),
       child: RaisedButton(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(24),
         ),
         onPressed: () async {
-          User user = await service.register(
-              name: insertedName,
-              email: insertedEmail,
-              password: insertedPassword,
-              password_confirmation: insertedPasswordConfirmation);
-          if (user.email != "") {
-            Navigator.of(context).pushNamed('/login');
-          } else {
-            ScaffoldMessenger.of(context).showSnackBar(snackBar);
-            print("wrong credentials");
+          // Validate returns true if the form is valid, or false otherwise.
+          if (_formKey.currentState!.validate()) {
+            // If the form is valid, display a snackbar. In the real world,
+            // you'd often call a server or save the information in a database.
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('Processing Data')),
+            );
+            print(insertedName);
+            print(insertedEmail);
+            print(gender);
+            print(age);
+            print(height);
+            print(weight);
+            print(typeOfTraining);
+            print(insertedPassword);
+            print(_image?.path);
+            Coach user = await service.registerCoach(
+                image: _image?.path,
+                name: insertedName,
+                email: insertedEmail,
+                gender: gender,
+                age: age,
+                typeOfTraining: typeOfTraining,
+                password: insertedPassword,
+                password_confirmation: insertedPasswordConfirmation);
+            if (user.email != "") {
+              Navigator.of(context).pushNamed('/login');
+            } else {
+              ScaffoldMessenger.of(context).showSnackBar(snackBar);
+              print("wrong credentials");
+            }
           }
         },
         padding: EdgeInsets.all(12),
-        color: Colors.lightBlueAccent,
+        color: Colors.deepOrange,
         child: Text('Register', style: TextStyle(color: Colors.white)),
       ),
     );
 
     return Scaffold(
+      appBar: CustomAppBar(context),
       backgroundColor: Colors.white,
       body: Center(
-        child: ListView(
-          shrinkWrap: true,
-          padding: EdgeInsets.only(left: 24.0, right: 24.0),
-          children: <Widget>[
-            logo,
-            SizedBox(height: 48.0),
-            name,
-            SizedBox(height: 8.0),
-            email,
-            SizedBox(height: 8.0),
-            password,
-            SizedBox(height: 8.0),
-            passwordConfirmation,
-            SizedBox(height: 24.0),
-            loginButton,
-          ],
+        child: Form(
+          key: _formKey,
+          child: ListView(
+            shrinkWrap: true,
+            padding: EdgeInsets.only(left: 24.0, right: 24.0),
+            children: <Widget>[
+              CircleAvatar(
+                radius: 100,
+                backgroundImage: _image != null
+                    ? FileImage(_image!)
+                    : AssetImage(_defaultImage) as ImageProvider,
+              ),
+              ElevatedButton(
+                onPressed: pickImage,
+                child: Text('Select Image'),
+              ),
+              name,
+              SizedBox(height: 8.0),
+              email,
+              SizedBox(height: 8.0),
+
+              // Gender
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: <Widget>[
+                  Text(
+                    'Gender:',
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  ),
+                  SizedBox(width: 10),
+                  Row(
+                    children: <Widget>[
+                      Radio(
+                        value: Gender.Male,
+                        groupValue: _selectedGender,
+                        onChanged: (value) {
+                          setState(() {
+                            _selectedGender = Gender.Male;
+                            gender = Gender.Male.toString()
+                                .substring(7)
+                                .toLowerCase();
+                            print(gender);
+                          });
+                        },
+                      ),
+                      Text('Male'),
+                    ],
+                  ),
+                  Row(
+                    children: <Widget>[
+                      Radio(
+                        value: Gender.Female,
+                        groupValue: _selectedGender,
+                        onChanged: (value) {
+                          _selectedGender = Gender.Female;
+                          print(Gender.Female.toString()
+                              .substring(7)
+                              .toLowerCase());
+                          gender = Gender.Female.toString()
+                              .substring(7)
+                              .toLowerCase();
+                          print(gender);
+                          setState(() {});
+                        },
+                      ),
+                      Text('Female'),
+                    ],
+                  ),
+                ],
+              ),
+
+              // age
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text("Age:"),
+                  SizedBox(
+                    width: 20,
+                  ),
+                  Container(
+                    width: 100,
+                    child: TextFormField(
+                      controller: ageController,
+                      keyboardType:
+                          TextInputType.numberWithOptions(decimal: false),
+                      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                      decoration: InputDecoration(
+                          // labelText: 'Enter your age',
+                          ),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Enter your age';
+                        }
+                        return null;
+                      },
+                      onChanged: (value) {
+                        if (value != null && value.isNotEmpty)
+                          age = int.parse(value);
+                        else
+                          age = 0;
+                      },
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(
+                height: 10,
+              ),
+
+              // Type of training
+              DropdownButtonFormField<String>(
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Enter type of training';
+                  }
+                  return null;
+                },
+                hint: Text("Type of training"),
+                value: typeOfTraining,
+                icon: const Icon(Icons.arrow_downward),
+                elevation: 16,
+                style: const TextStyle(color: Colors.deepOrange),
+                // underline: Container(
+                //   height: 2,
+                //   color: Colors.deepOrangeAccent,
+                // ),
+                onChanged: (String? value) {
+                  // This is called when the user selects an item.
+                  // setState(() {
+                  typeOfTraining = value!;
+                  // });
+                },
+                items: list.map<DropdownMenuItem<String>>((String value) {
+                  return DropdownMenuItem<String>(
+                    value: value,
+                    child: Text(value),
+                  );
+                }).toList(),
+              ),
+
+              SizedBox(height: 20.0),
+              password,
+              SizedBox(height: 8.0),
+              passwordConfirmation,
+              SizedBox(height: 24.0),
+              registerButton,
+            ],
+          ),
         ),
       ),
     );
