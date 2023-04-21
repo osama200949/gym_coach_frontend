@@ -28,9 +28,9 @@ class User {
           name: json['user']['name'],
           email: json['user']['email'],
           gender: json['user']['gender'],
-          age: int.parse(json['user']['age']),
-          height: double.parse(json['user']['height']),
-          weight: double.parse(json['user']['weight']),
+          age: int.parse(json['user']['age'].toString()),
+          height: double.parse(json['user']['height'].toString()),
+          weight: double.parse(json['user']['weight'].toString()),
           typeOfTraining: json['user']['typeOfTraining'],
           token: json['token'],
         );

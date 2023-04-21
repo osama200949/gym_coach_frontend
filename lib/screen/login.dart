@@ -92,7 +92,8 @@ class _LoginScreenState extends State<LoginScreen> {
             print("The id is: " + user.id.toString());
             userProvider2.set(user);
             print(userProvider2.get().name);
-            Navigator.pushReplacementNamed(context, '/home');
+            Navigator.pushReplacementNamed(context,'/customerHomePage');
+
             // Navigator.of(context).pushNamed('/home');
           } else {
             ScaffoldMessenger.of(context).showSnackBar(snackBar);
