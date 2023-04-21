@@ -5,6 +5,8 @@ import 'package:todo_list/models/coach.dart';
 import 'package:todo_list/provider/user_provider.dart';
 import 'package:todo_list/services/rest.dart';
 
+import '../models/training_coac.dart';
+
 class CustomerChatScreen extends StatefulWidget {
   const CustomerChatScreen({Key? key}) : super(key: key);
 
@@ -17,17 +19,17 @@ class _CustomerChatScreenState extends State<CustomerChatScreen> {
   UserProvider user = new UserProvider();
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<List<Coach>>(
+    return FutureBuilder<List<TrainingCoach>>(
         future: service.getCoaches(
             token: user.get().token, typeOfTraining: "Body builder"),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done &&
               snapshot.hasData) {
-            List<Coach> data = snapshot.data as List<Coach>;
+            List<TrainingCoach> data = snapshot.data as List<TrainingCoach>;
             return ListView.builder(
               itemCount: data.length,
               itemBuilder: (context, index) {
-                Coach coach = data[index];
+                TrainingCoach coach = data[index];
                 return ListTile(
                   leading: CircleAvatar(
                     backgroundImage: NetworkImage(

@@ -12,6 +12,8 @@ import 'package:todo_list/models/coach.dart';
 import 'package:todo_list/models/product.dart';
 import 'package:todo_list/models/user.dart';
 
+import '../models/training_coac.dart';
+
 class DataService {
   String baseUrl =
       // "http://127.0.0.1:8000/api"; // Change the IP address to your PC's IP. Remain the port number 3000 unchanged.
@@ -122,10 +124,10 @@ class DataService {
     return list;
   }
 
-  Future<List<Coach>> getCoaches({required String token, required String typeOfTraining}) async {
+  Future<List<TrainingCoach>> getCoaches({required String token, required String typeOfTraining}) async {
     final listJson = await get("coaches/$typeOfTraining", token);
     final list = (listJson as List)
-        .map((itemJson) => Coach.fromJson(itemJson))
+        .map((itemJson) => TrainingCoach.fromJson(itemJson))
         .toList();
     return list;
   }
