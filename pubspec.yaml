@@ -36,7 +36,6 @@ dependencies:
   gender_picker: ^1.1.0
   http: ^0.13.5
   image: ^3.2.2
-  image_picker: ^0.8.7+3
   provider: ^6.0.5
 
 dev_dependencies:
