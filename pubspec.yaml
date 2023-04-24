@@ -27,9 +27,11 @@ environment:
 # the latest version available on pub.dev. To see which dependencies have newer
 # versions available, run `flutter pub outdated`.
 dependencies:
+  cloud_firestore: ^4.5.2
   cupertino_icons: ^1.0.2
   dio: ^4.0.6
   file_picker: ^5.2.2
+  firebase_auth: ^4.4.2
   flutter:
     sdk: flutter
   font_awesome_flutter: ">= 4.7.0"
@@ -37,6 +39,7 @@ dependencies:
   http: ^0.13.5
   image: ^3.2.2
   provider: ^6.0.5
+  socket_io_client: ^2.0.2
 
 dev_dependencies:
   flutter_lints: ^2.0.0

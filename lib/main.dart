@@ -5,11 +5,13 @@ import 'package:todo_list/models/carousel.dart';
 import 'package:todo_list/models/product.dart';
 import 'package:todo_list/models/user.dart';
 import 'package:todo_list/provider/user_provider.dart';
-import 'package:todo_list/screen/coach_register.dart';
+import 'package:todo_list/screen/chat.dart';
+import 'package:todo_list/screen/coach_home.dart';
+import 'package:todo_list/screen/register.dart';
 import 'package:todo_list/screen/customer_home.dart';
 import 'package:todo_list/screen/customer_profile.dart';
 import 'package:todo_list/screen/login.dart';
-import 'package:todo_list/screen/customer_register.dart';
+import 'package:todo_list/bin/customer_register.dart';
 import 'package:todo_list/screen/test.dart';
 import 'package:todo_list/widgets/create_bottom_sheet.dart';
 import 'package:todo_list/widgets/edit_bottom_sheet.dart';
@@ -40,15 +42,17 @@ class MyApp extends StatelessWidget {
       routes: {
         // When navigating to the "/" route, build the FirstScreen widget.
         '/login': (context) => LoginScreen(),
+        '/chat': (context) => ChatPage(),
         // '/test': (context) => DropdownButtonApp(),
         // When navigating to the "/second" route, build the SecondScreen widget.
         // '/home': (context) => const MyHomePage(
         //       title: 'Gym coach',
         //     ),
         '/customerHomePage': (context) => const CustomerHomeScreen(),
+        '/coachHomePage': (context) => const CoachHomeScreen(),
         '/customerProfilePage': (context) => const CustomerProfileScreen(),
-        '/customerRegister': (context) => const CustomerRegisterScreen(),
-        '/coachRegister': (context) => const CoachRegistrationScreen(),
+        '/customerRegister': (context) =>  RegisterScreen(role: 0,),
+        '/coachRegister': (context) => RegisterScreen(role: 1,),
       },
     );
   }

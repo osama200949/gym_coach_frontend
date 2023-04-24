@@ -124,8 +124,17 @@ class DataService {
     return list;
   }
 
-  Future<List<TrainingCoach>> getCoaches({required String token, required String typeOfTraining}) async {
+  Future<List<TrainingCoach>> getCoaches(
+      {required String token, required String typeOfTraining}) async {
     final listJson = await get("coaches/$typeOfTraining", token);
+    final list = (listJson as List)
+        .map((itemJson) => TrainingCoach.fromJson(itemJson))
+        .toList();
+    return list;
+  }
+  Future<List<TrainingCoach>> getCustomers(
+      {required String token, required String typeOfTraining}) async {
+    final listJson = await get("customers/$typeOfTraining", token);
     final list = (listJson as List)
         .map((itemJson) => TrainingCoach.fromJson(itemJson))
         .toList();
@@ -189,6 +198,7 @@ class DataService {
         return parsed;
       } else {
         return User(
+            image: "",
             email: "",
             name: "",
             gender: "",
@@ -196,10 +206,12 @@ class DataService {
             height: 0,
             weight: 0,
             typeOfTraining: "",
+            role: 0,
             token: "");
       }
     } on DioError catch (e) {
       return User(
+          image: "",
           email: "",
           name: "",
           gender: "",
@@ -207,16 +219,20 @@ class DataService {
           height: 0,
           weight: 0,
           typeOfTraining: "",
+          role: 0,
           token: "");
     }
   }
 
-  Future<Coach> registerCoach(
-      {image,
+  Future<User> register(
+      {role,
+      image,
       name,
       email,
       gender,
       age,
+      height,
+      weight,
       typeOfTraining,
       password,
       password_confirmation}) async {
@@ -229,50 +245,10 @@ class DataService {
       "email": email,
       "gender": gender,
       "age": age,
-      "typeOfTraining": typeOfTraining,
-      "password": password,
-      "password_confirmation": password_confirmation
-    });
-     try {
-      final response = await Dio().post('$baseUrl/registerCoach', data: body);
-      print(response);
-      final parsed = Coach.fromJson(response.data);
-      return parsed;
-    } on DioError catch (e) {
-      print(e);
-      return Coach(
-          image: "",
-          name: "",
-          email: "",
-          gender: "",
-          age: 0,
-          typeOfTraining: "",
-          token: "");
-    }
-
-  
-
-
-  }
-
-  Future<User> register(
-      {name,
-      email,
-      gender,
-      age,
-      height,
-      weight,
-      typeOfTraining,
-      password,
-      password_confirmation}) async {
-    var body = FormData.fromMap({
-      "name": name,
-      "email": email,
-      "gender": gender,
-      "age": age,
       "height": height,
       "weight": weight,
       "typeOfTraining": typeOfTraining,
+      "role": role,
       "password": password,
       "password_confirmation": password_confirmation
     });
@@ -284,16 +260,62 @@ class DataService {
     } on DioError catch (e) {
       print(e);
       return User(
-          email: "",
+          image: "",
           name: "",
+          email: "",
           gender: "",
           age: 0,
           height: 0,
           weight: 0,
           typeOfTraining: "",
+          role: 0,
           token: "");
     }
   }
+
+  // Future<User> register(
+  //     {image,
+  //     name,
+  //     email,
+  //     gender,
+  //     age,
+  //     height,
+  //     weight,
+  //     typeOfTraining,
+  //     password,
+  //     password_confirmation}) async {
+  //   var body = FormData.fromMap({
+  //     "name": name,
+  //     "email": email,
+  //     "gender": gender,
+  //     "age": age,
+  //     "height": height,
+  //     "weight": weight,
+  //     "typeOfTraining": typeOfTraining,
+  //     "password": password,
+  //     "role": 0,
+  //     "password_confirmation": password_confirmation
+  //   });
+  //   try {
+  //     final response = await Dio().post('$baseUrl/register', data: body);
+  //     print(response);
+  //     final parsed = User.fromJson(response.data);
+  //     return parsed;
+  //   } on DioError catch (e) {
+  //     print(e);
+  //     return User(
+  //         image: "",
+  //         email: "",
+  //         name: "",
+  //         gender: "",
+  //         age: 0,
+  //         height: 0,
+  //         weight: 0,
+  //         typeOfTraining: "",
+  //         role: 0,
+  //         token: "");
+  //   }
+  // }
 
   Future<bool> logout(String token) async {
     try {

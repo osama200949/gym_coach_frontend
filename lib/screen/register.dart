@@ -20,17 +20,17 @@ const List<String> list = <String>[
   'Comprehensive'
 ];
 
-class CoachRegistrationScreen extends StatefulWidget {
-  const CoachRegistrationScreen({Key? key}) : super(key: key);
+class RegisterScreen extends StatefulWidget {
+  RegisterScreen({Key? key, required this.role}) : super(key: key);
+  int role;
 
   @override
-  State<CoachRegistrationScreen> createState() =>
-      _CoachRegistrationScreenState();
+  State<RegisterScreen> createState() => _RegisterScreenState();
 }
 
 Gender _selectedGender = Gender.Male;
 
-class _CoachRegistrationScreenState extends State<CoachRegistrationScreen> {
+class _RegisterScreenState extends State<RegisterScreen> {
   String? typeOfTraining;
   final _formKey = GlobalKey<FormState>();
   DataService service = DataService();
@@ -158,10 +158,14 @@ class _CoachRegistrationScreenState extends State<CoachRegistrationScreen> {
 
     final registerButton = Padding(
       padding: EdgeInsets.symmetric(vertical: 16.0),
-      child: RaisedButton(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(24),
-        ),
+      child: ElevatedButton(
+        style: ButtonStyle(
+            padding: MaterialStateProperty.all<EdgeInsets>(EdgeInsets.all(12)),
+            backgroundColor: MaterialStateProperty.all(Colors.deepOrange),
+            shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(24.0),
+                    side: BorderSide(color: Colors.red)))),
         onPressed: () async {
           // Validate returns true if the form is valid, or false otherwise.
           if (_formKey.currentState!.validate()) {
@@ -179,12 +183,15 @@ class _CoachRegistrationScreenState extends State<CoachRegistrationScreen> {
             print(typeOfTraining);
             print(insertedPassword);
             print(_image?.path);
-            Coach user = await service.registerCoach(
+            User user = await service.register(
+                role: widget.role,
                 image: _image?.path,
                 name: insertedName,
                 email: insertedEmail,
                 gender: gender,
                 age: age,
+                height: height,
+                weight: weight,
                 typeOfTraining: typeOfTraining,
                 password: insertedPassword,
                 password_confirmation: insertedPasswordConfirmation);
@@ -196,8 +203,6 @@ class _CoachRegistrationScreenState extends State<CoachRegistrationScreen> {
             }
           }
         },
-        padding: EdgeInsets.all(12),
-        color: Colors.deepOrange,
         child: Text('Register', style: TextStyle(color: Colors.white)),
       ),
     );
@@ -315,7 +320,68 @@ class _CoachRegistrationScreenState extends State<CoachRegistrationScreen> {
               SizedBox(
                 height: 10,
               ),
-
+              // height and weight
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text("Height:"),
+                  SizedBox(
+                    width: 5,
+                  ),
+                  Container(
+                    width: 100,
+                    child: TextFormField(
+                      controller: heightController,
+                      keyboardType:
+                          TextInputType.numberWithOptions(decimal: true),
+                      decoration: InputDecoration(),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Enter your height';
+                        }
+                        return null;
+                      },
+                      onChanged: (value) {
+                        if (value != null && value.isNotEmpty)
+                          height = double.parse(value);
+                        else
+                          height = 0;
+                      },
+                    ),
+                  ),
+                  SizedBox(
+                    width: 20,
+                  ),
+                  // weight
+                  Text("Weight:"),
+                  SizedBox(
+                    width: 5,
+                  ),
+                  Container(
+                    width: 100,
+                    child: TextFormField(
+                      controller: weightController,
+                      keyboardType:
+                          TextInputType.numberWithOptions(decimal: true),
+                      decoration: InputDecoration(),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Enter your weight';
+                        }
+                        return null;
+                      },
+                      onChanged: (value) {
+                        if (value != null && value.isNotEmpty)
+                          weight = double.parse(value);
+                        else
+                          weight = 0;
+                      },
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 20.0),
+              // Type of training
               // Type of training
               DropdownButtonFormField<String>(
                 validator: (value) {

@@ -138,10 +138,14 @@ class _CustomerRegisterScreenState extends State<CustomerRegisterScreen> {
 
     final registerButton = Padding(
       padding: EdgeInsets.symmetric(vertical: 16.0),
-      child: RaisedButton(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(24),
-        ),
+      child: ElevatedButton(
+        style: ButtonStyle(
+            padding: MaterialStateProperty.all<EdgeInsets>(EdgeInsets.all(12)),
+            backgroundColor: MaterialStateProperty.all(Colors.deepOrange),
+            shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(18.0),
+                    side: BorderSide(color: Colors.red)))),
         onPressed: () async {
           // Validate returns true if the form is valid, or false otherwise.
           if (_formKey.currentState!.validate()) {
@@ -176,8 +180,6 @@ class _CustomerRegisterScreenState extends State<CustomerRegisterScreen> {
             }
           }
         },
-        padding: EdgeInsets.all(12),
-        color: Colors.deepOrange,
         child: Text('Register', style: TextStyle(color: Colors.white)),
       ),
     );
@@ -231,7 +233,6 @@ class _CustomerRegisterScreenState extends State<CustomerRegisterScreen> {
                         value: Gender.Female,
                         groupValue: _selectedGender,
                         onChanged: (value) {
-                          
                           _selectedGender = Gender.Female;
                           print(Gender.Female.toString()
                               .substring(7)
@@ -240,9 +241,7 @@ class _CustomerRegisterScreenState extends State<CustomerRegisterScreen> {
                               .substring(7)
                               .toLowerCase();
                           print(gender);
-                          setState(() {
-                            
-                          });
+                          setState(() {});
                         },
                       ),
                       Text('Female'),

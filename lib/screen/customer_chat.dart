@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:provider/provider.dart';
 import 'package:todo_list/models/coach.dart';
+import 'package:todo_list/models/user.dart';
 import 'package:todo_list/provider/user_provider.dart';
 import 'package:todo_list/services/rest.dart';
 
@@ -16,12 +18,19 @@ class CustomerChatScreen extends StatefulWidget {
 
 class _CustomerChatScreenState extends State<CustomerChatScreen> {
   DataService service = new DataService();
-  UserProvider user = new UserProvider();
   @override
   Widget build(BuildContext context) {
+ final user = Provider.of<UserProvider>(context, listen: true).get();
+    print("user role= ${user.typeOfTraining}");
+    
     return FutureBuilder<List<TrainingCoach>>(
-        future: service.getCoaches(
-            token: user.get().token, typeOfTraining: "Body builder"),
+        // future: service.getCoaches(
+        //     token: user.token, typeOfTraining: "Body builder")
+        future: user.role==0 ? service.getCoaches(
+            token: user.token, typeOfTraining: user.typeOfTraining):
+            service.getCustomers(
+            token: user.token, typeOfTraining: user.typeOfTraining)
+        ,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done &&
               snapshot.hasData) {
@@ -31,6 +40,9 @@ class _CustomerChatScreenState extends State<CustomerChatScreen> {
               itemBuilder: (context, index) {
                 TrainingCoach coach = data[index];
                 return ListTile(
+                  onTap: (){
+                    Navigator.pushNamed(context, '/chat');
+                  },
                   leading: CircleAvatar(
                     backgroundImage: NetworkImage(
                         "http://192.168.75.1/gym_coach/public/images/${coach.image}"),

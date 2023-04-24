@@ -16,7 +16,7 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   UserProvider userProvider = UserProvider();
   DataService service = DataService();
-  String insertedEmail = "osama200949@gmail.com";
+  String insertedEmail = "os@gmail.com";
   String insertedPassword = "123456";
   @override
   Widget build(BuildContext context) {
@@ -77,12 +77,17 @@ class _LoginScreenState extends State<LoginScreen> {
     );
     final loginButton = Padding(
       padding: EdgeInsets.symmetric(vertical: 16.0),
-      child: RaisedButton(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(24),
-        ),
+      child: ElevatedButton(
+        style: ButtonStyle(
+            padding: MaterialStateProperty.all<EdgeInsets>(EdgeInsets.all(12)),
+            backgroundColor: MaterialStateProperty.all(Colors.deepOrange),
+            shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(24.0),
+                    side: BorderSide(color: Colors.red)))),
         onPressed: () async {
-          final userProvider2 = Provider.of<UserProvider>(context, listen: false);
+          final userProvider2 =
+              Provider.of<UserProvider>(context, listen: false);
           User user =
               await service.authenticate(insertedEmail, insertedPassword);
           print(insertedEmail);
@@ -92,7 +97,11 @@ class _LoginScreenState extends State<LoginScreen> {
             print("The id is: " + user.id.toString());
             userProvider2.set(user);
             print(userProvider2.get().name);
-            Navigator.pushReplacementNamed(context,'/customerHomePage');
+            if (userProvider2.get().role == 1) {
+              Navigator.pushReplacementNamed(context, '/coachHomePage');
+            } else {
+              Navigator.pushReplacementNamed(context, '/customerHomePage');
+            }
 
             // Navigator.of(context).pushNamed('/home');
           } else {
@@ -100,13 +109,12 @@ class _LoginScreenState extends State<LoginScreen> {
             print("wrong credentials");
           }
         },
-        padding: EdgeInsets.all(12),
-        color: Colors.deepOrange,
-        child: Text('Log In', style: TextStyle(fontSize: 20, color: Colors.white)),
+        child:
+            Text('Log In', style: TextStyle(fontSize: 20, color: Colors.white)),
       ),
     );
 
-    final customerBtn = FlatButton(
+    final customerBtn = TextButton(
       child: Text(
         'Register as a new customer',
         style: TextStyle(color: Colors.deepOrange),
@@ -115,7 +123,7 @@ class _LoginScreenState extends State<LoginScreen> {
         Navigator.pushNamed(context, '/customerRegister');
       },
     );
-    final coachBtn = FlatButton(
+    final coachBtn = TextButton(
       child: Text(
         'Register as a new coach',
         style: TextStyle(color: Colors.deepOrange),
