@@ -42,7 +42,7 @@ class MyApp extends StatelessWidget {
       routes: {
         // When navigating to the "/" route, build the FirstScreen widget.
         '/login': (context) => LoginScreen(),
-        '/chat': (context) => ChatPage(),
+        '/chat': (context) => StreamDataWidget(firstParam: '2',secondParam: '3',),
         // '/test': (context) => DropdownButtonApp(),
         // When navigating to the "/second" route, build the SecondScreen widget.
         // '/home': (context) => const MyHomePage(

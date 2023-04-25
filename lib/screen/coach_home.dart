@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:todo_list/main.dart';
+import 'package:todo_list/screen/coach_training.dart';
 import 'package:todo_list/screen/customer_chat.dart';
 import 'package:todo_list/screen/customer_profile.dart';
 
@@ -19,7 +20,7 @@ class _CoachHomeScreenState extends State<CoachHomeScreen> {
     // MyHomePage(title: "title"),
     // Text('Search'),
     CustomerChatScreen(),
-    Text('Notifications'),
+    CoachTrainingScreen(),
     // Text('Profile'),
     CustomerProfileScreen(),
   ];
