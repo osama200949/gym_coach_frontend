@@ -1,27 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:todo_list/main.dart';
-import 'package:todo_list/screen/customer_chat.dart';
-import 'package:todo_list/screen/customer_profile.dart';
+import 'package:todo_list/screen/coach/coach_chat.dart';
+import 'package:todo_list/screen/coach/coach_profile.dart';
+import 'coach_customers.dart';
 
-class CustomerHomeScreen extends StatefulWidget {
-  const CustomerHomeScreen({Key? key}) : super(key: key);
+class CoachHomeScreen extends StatefulWidget {
+  const CoachHomeScreen({Key? key}) : super(key: key);
 
   @override
-  State<CustomerHomeScreen> createState() => _CustomerHomeScreenState();
+  State<CoachHomeScreen> createState() => _CoachHomeScreenState();
 }
 
-class _CustomerHomeScreenState extends State<CustomerHomeScreen> {
+class _CoachHomeScreenState extends State<CoachHomeScreen> {
   int _selectedIndex = 0;
   static const List<Widget> _widgetOptions = <Widget>[
-    Text('Home2'),
+    Text('Coach home screen'),
     // MyHomePage(title: "title"),
     // Text('Search'),
-    CustomerChatScreen(),
-    Text('Notifications'),
+    CoachChatScreen(),
+    // CoachCustomerScreen(),
+    CoachCustomersScreen(),
     // Text('Profile'),
-    CustomerProfileScreen(),
+    CoachProfileScreen(),
   ];
 
   void _onItemTapped(int index) {
@@ -53,8 +56,8 @@ class _CustomerHomeScreenState extends State<CustomerHomeScreen> {
             label: 'Chat',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.sports_gymnastics),
-            label: 'training',
+            icon: Icon(FontAwesomeIcons.userGroup),
+            label: 'Customers',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.person),

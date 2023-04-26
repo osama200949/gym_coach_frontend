@@ -2,25 +2,23 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:todo_list/main.dart';
-import 'package:todo_list/screen/coach_training.dart';
-import 'package:todo_list/screen/customer_chat.dart';
-import 'package:todo_list/screen/customer_profile.dart';
-
-class CoachHomeScreen extends StatefulWidget {
-  const CoachHomeScreen({Key? key}) : super(key: key);
+import 'package:todo_list/screen/customer/customer_chat.dart';
+import 'package:todo_list/screen/customer/customer_profile.dart';
+class CustomerHomeScreen extends StatefulWidget {
+  const CustomerHomeScreen({Key? key}) : super(key: key);
 
   @override
-  State<CoachHomeScreen> createState() => _CoachHomeScreenState();
+  State<CustomerHomeScreen> createState() => _CustomerHomeScreenState();
 }
 
-class _CoachHomeScreenState extends State<CoachHomeScreen> {
+class _CustomerHomeScreenState extends State<CustomerHomeScreen> {
   int _selectedIndex = 0;
   static const List<Widget> _widgetOptions = <Widget>[
-    Text('Coach home screen'),
+    Text('Home2'),
     // MyHomePage(title: "title"),
     // Text('Search'),
     CustomerChatScreen(),
-    CoachTrainingScreen(),
+    Text('Notifications'),
     // Text('Profile'),
     CustomerProfileScreen(),
   ];

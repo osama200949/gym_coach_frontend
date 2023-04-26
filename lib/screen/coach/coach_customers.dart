@@ -3,45 +3,45 @@ import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:provider/provider.dart';
 import 'package:todo_list/models/coach.dart';
+import 'package:todo_list/models/customer.dart';
 import 'package:todo_list/models/user.dart';
 import 'package:todo_list/provider/user_provider.dart';
 import 'package:todo_list/services/rest.dart';
 
-import '../models/training_coac.dart';
+import '../../provider/customer_provider.dart';
 
-class CustomerChatScreen extends StatefulWidget {
-  const CustomerChatScreen({Key? key}) : super(key: key);
+class CoachCustomersScreen extends StatefulWidget {
+  const CoachCustomersScreen({Key? key}) : super(key: key);
 
   @override
-  State<CustomerChatScreen> createState() => _CustomerChatScreenState();
+  State<CoachCustomersScreen> createState() => _CoachCustomersScreenState();
 }
 
-class _CustomerChatScreenState extends State<CustomerChatScreen> {
+class _CoachCustomersScreenState extends State<CoachCustomersScreen> {
   DataService service = new DataService();
   @override
   Widget build(BuildContext context) {
- final user = Provider.of<UserProvider>(context, listen: true).get();
+    final user = Provider.of<UserProvider>(context, listen: true).get();
+    final customer = Provider.of<CustomerProvider>(context, listen: false);
     print("user role= ${user.typeOfTraining}");
-    
-    return FutureBuilder<List<TrainingCoach>>(
+
+    return FutureBuilder<List<Customer>>(
         // future: service.getCoaches(
         //     token: user.token, typeOfTraining: "Body builder")
-        future: user.role==0 ? service.getCoaches(
-            token: user.token, typeOfTraining: user.typeOfTraining):
-            service.getCustomers(
-            token: user.token, typeOfTraining: user.typeOfTraining)
-        ,
+        future: service.getCustomers(
+            token: user.token, typeOfTraining: user.typeOfTraining),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done &&
               snapshot.hasData) {
-            List<TrainingCoach> data = snapshot.data as List<TrainingCoach>;
+            List<Customer> data = snapshot.data as List<Customer>;
             return ListView.builder(
               itemCount: data.length,
               itemBuilder: (context, index) {
-                TrainingCoach coach = data[index];
+                Customer coach = data[index];
                 return ListTile(
-                  onTap: (){
-                    Navigator.pushNamed(context, '/chat');
+                  onTap: () {
+                    customer.set(data[index]);
+                    Navigator.pushNamed(context, '/coachCustomerPage');
                   },
                   leading: CircleAvatar(
                     backgroundImage: NetworkImage(

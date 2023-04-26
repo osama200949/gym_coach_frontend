@@ -4,15 +4,20 @@ import 'package:provider/provider.dart';
 import 'package:todo_list/models/carousel.dart';
 import 'package:todo_list/models/product.dart';
 import 'package:todo_list/models/user.dart';
+import 'package:todo_list/provider/customer_provider.dart';
+import 'package:todo_list/provider/training_provider.dart';
 import 'package:todo_list/provider/user_provider.dart';
+import 'package:todo_list/screen/coach/add_new_training.dart';
 import 'package:todo_list/screen/chat.dart';
-import 'package:todo_list/screen/coach_home.dart';
+import 'package:todo_list/screen/coach/coach_home.dart';
+import 'package:todo_list/screen/coach/coach_training.dart';
+import 'package:todo_list/screen/customer/customer_home.dart';
+import 'package:todo_list/screen/customer/customer_profile.dart';
 import 'package:todo_list/screen/register.dart';
-import 'package:todo_list/screen/customer_home.dart';
-import 'package:todo_list/screen/customer_profile.dart';
 import 'package:todo_list/screen/login.dart';
 import 'package:todo_list/bin/customer_register.dart';
 import 'package:todo_list/screen/test.dart';
+import 'package:todo_list/screen/training_detail.dart';
 import 'package:todo_list/widgets/create_bottom_sheet.dart';
 import 'package:todo_list/widgets/edit_bottom_sheet.dart';
 import 'package:todo_list/widgets/snackbar.dart';
@@ -23,6 +28,8 @@ void main() {
   runApp(MultiProvider(
     providers: [
       ChangeNotifierProvider(create: (context) => UserProvider()),
+      ChangeNotifierProvider(create: (context) => TrainingProvider()),
+      ChangeNotifierProvider(create: (context) => CustomerProvider()),
     ],
     child: const MyApp(),
   ));
@@ -48,6 +55,12 @@ class MyApp extends StatelessWidget {
         // '/home': (context) => const MyHomePage(
         //       title: 'Gym coach',
         //     ),
+        '/trainingDetailPage': (context) => TrainingDetailsScreen(),
+        '/addNewTraining': (context) => AddNewTrainingScreen(),
+        '/coachCustomerPage': (context) => CoachCustomerScreen(),
+        
+        
+        
         '/customerHomePage': (context) => const CustomerHomeScreen(),
         '/coachHomePage': (context) => const CoachHomeScreen(),
         '/customerProfilePage': (context) => const CustomerProfileScreen(),

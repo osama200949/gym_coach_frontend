@@ -9,6 +9,7 @@ import 'dart:convert';
 
 import 'package:todo_list/models/carousel.dart';
 import 'package:todo_list/models/coach.dart';
+import 'package:todo_list/models/customer.dart';
 import 'package:todo_list/models/product.dart';
 import 'package:todo_list/models/user.dart';
 
@@ -132,11 +133,11 @@ class DataService {
         .toList();
     return list;
   }
-  Future<List<TrainingCoach>> getCustomers(
+  Future<List<Customer>> getCustomers(
       {required String token, required String typeOfTraining}) async {
     final listJson = await get("customers/$typeOfTraining", token);
     final list = (listJson as List)
-        .map((itemJson) => TrainingCoach.fromJson(itemJson))
+        .map((itemJson) => Customer.fromJson(itemJson))
         .toList();
     return list;
   }
