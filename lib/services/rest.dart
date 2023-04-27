@@ -133,6 +133,19 @@ class DataService {
     return Training.fromJson(json);
   }
 
+  Future<List<TrainingCoach>> getAllCoaches({required String token}) async {
+    try {
+      final listJson = await get("allCoaches", token);
+      final list = (listJson as List)
+          .map((itemJson) => TrainingCoach.fromJson(itemJson))
+          .toList();
+      return list;
+    } catch (e) {
+      List<TrainingCoach> u = [];
+      return u;
+    }
+  }
+
   Future<List<TrainingCoach>> getCoaches(
       {required String token, required String typeOfTraining}) async {
     final listJson = await get("coaches/$typeOfTraining", token);
@@ -155,6 +168,20 @@ class DataService {
       {required int customerId, required String token}) async {
     try {
       final listJson = await get("customers/training/$customerId", token);
+      final list = (listJson as List)
+          .map((itemJson) => Training.fromJson(itemJson))
+          .toList();
+      return list;
+    } catch (e) {
+      print(e);
+      List<Training> t = [];
+      return t;
+    }
+  }
+
+  Future<List<Training>> getAllTraining({required String token}) async {
+    try {
+      final listJson = await get("customers/training", token);
       final list = (listJson as List)
           .map((itemJson) => Training.fromJson(itemJson))
           .toList();

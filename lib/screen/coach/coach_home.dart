@@ -6,6 +6,7 @@ import 'package:todo_list/main.dart';
 import 'package:todo_list/screen/coach/coach_chat.dart';
 import 'package:todo_list/screen/coach/coach_profile.dart';
 import 'coach_customers.dart';
+import 'coach_dashboard.dart';
 
 class CoachHomeScreen extends StatefulWidget {
   const CoachHomeScreen({Key? key}) : super(key: key);
@@ -16,8 +17,9 @@ class CoachHomeScreen extends StatefulWidget {
 
 class _CoachHomeScreenState extends State<CoachHomeScreen> {
   int _selectedIndex = 0;
-  static const List<Widget> _widgetOptions = <Widget>[
-    Text('Coach home screen'),
+  static List<Widget> _widgetOptions = <Widget>[
+    // Text('Coach home screen'),
+    DashboardScreen(),
     // MyHomePage(title: "title"),
     // Text('Search'),
     CoachChatScreen(),

@@ -22,7 +22,7 @@ class _CoachCustomersScreenState extends State<CoachCustomersScreen> {
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<UserProvider>(context, listen: true).get();
-    final customer = Provider.of<CustomerProvider>(context, listen: false);
+    final customer2 = Provider.of<CustomerProvider>(context, listen: false);
     print("user role= ${user.typeOfTraining}");
 
     return FutureBuilder<List<Customer>>(
@@ -37,18 +37,18 @@ class _CoachCustomersScreenState extends State<CoachCustomersScreen> {
             return ListView.builder(
               itemCount: data.length,
               itemBuilder: (context, index) {
-                Customer coach = data[index];
+                Customer customer = data[index];
                 return ListTile(
                   onTap: () {
-                    customer.set(data[index]);
+                    customer2.set(data[index]);
                     Navigator.pushNamed(context, '/coachCustomerPage');
                   },
                   leading: CircleAvatar(
                     backgroundImage: NetworkImage(
-                        "http://192.168.75.1/gym_coach/public/images/${coach.image}"),
+                        "http://192.168.75.1/gym_coach/public/images/${customer.image}"),
                   ),
-                  title: Text(coach.name),
-                  subtitle: Text(coach.email),
+                  title: Text(customer.name),
+                  subtitle: Text(customer.email),
                 );
               },
             );
