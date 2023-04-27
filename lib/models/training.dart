@@ -6,7 +6,7 @@ class Training {
   String description;
   String day;
   String ?video;
-  bool isCompleted;
+  int isCompleted;
   int coachId;
   int customerId;
   String coachName;
@@ -31,8 +31,8 @@ class Training {
           day: json['day'],
           video: json['video'],
           isCompleted: json['isCompleted'],
-          coachId: json['coachId'],
-          customerId: json['customerId'],
+          coachId: int.parse(json['coachId']) ,
+          customerId: int.parse(json['customerId']) ,
           coachName: json['coachName'],
         );
 

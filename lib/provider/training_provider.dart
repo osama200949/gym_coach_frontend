@@ -11,11 +11,18 @@ class TrainingProvider extends ChangeNotifier {
     day: "Sunday",
     video:
         "https://www.youtube.com/watch?v=t-h0T3dE8t4&pp=ygUVYm9keSBidWlsZGVyIHRyYWluaW5n",
-    isCompleted: false,
+    isCompleted: 0,
     coachId: 2,
     customerId: 3,
     coachName: "Osama Abdalla",
   );
+
+  List<Training> trainings = [];
+
+  void setListOFTrainings(List<Training> incomingTrainings){
+    trainings = incomingTrainings;
+    notifyListeners();
+  }
 
   void set(Training incomingTraining) {
     _training = incomingTraining;

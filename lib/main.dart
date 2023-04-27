@@ -7,6 +7,7 @@ import 'package:todo_list/models/user.dart';
 import 'package:todo_list/provider/customer_provider.dart';
 import 'package:todo_list/provider/training_provider.dart';
 import 'package:todo_list/provider/user_provider.dart';
+import 'package:todo_list/provider/weekday_provider.dart';
 import 'package:todo_list/screen/coach/add_new_training.dart';
 import 'package:todo_list/screen/chat.dart';
 import 'package:todo_list/screen/coach/coach_home.dart';
@@ -30,6 +31,7 @@ void main() {
       ChangeNotifierProvider(create: (context) => UserProvider()),
       ChangeNotifierProvider(create: (context) => TrainingProvider()),
       ChangeNotifierProvider(create: (context) => CustomerProvider()),
+      ChangeNotifierProvider(create: (context) => WeekdayProvider()),
     ],
     child: const MyApp(),
   ));

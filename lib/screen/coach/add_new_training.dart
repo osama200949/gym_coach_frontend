@@ -3,15 +3,18 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:todo_list/models/training.dart';
+import 'package:todo_list/provider/training_provider.dart';
 import 'package:todo_list/provider/user_provider.dart';
+import 'package:todo_list/provider/weekday_provider.dart';
 import 'package:todo_list/services/rest.dart';
 import 'package:todo_list/widgets/appbar.dart';
 
 import '../../provider/customer_provider.dart';
+import '../../provider/training_provider.dart';
 
 class AddNewTrainingScreen extends StatefulWidget {
-  const AddNewTrainingScreen({super.key});
-
+ AddNewTrainingScreen({super.key});
+  
   @override
   State<AddNewTrainingScreen> createState() => _AddNewTrainingScreenState();
 }
@@ -21,13 +24,16 @@ class _AddNewTrainingScreenState extends State<AddNewTrainingScreen> {
   final TextEditingController _descriptionController = TextEditingController();
   final TextEditingController _videoLinkController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  String _selectedWeekday =
-      'Sunday'; //TODO: this should come from the previous page.
+  // String _selectedWeekday =
+       
   @override
   Widget build(BuildContext context) {
     DataService service = DataService();
     final customer = Provider.of<CustomerProvider>(context, listen: true).get();
     final user = Provider.of<UserProvider>(context, listen: true).get();
+    final String weekday = Provider.of<WeekdayProvider>(context, listen: true).get();
+    
+    String selectedWeekDay = weekday;
     return Scaffold(
       appBar: CustomAppBar(context),
       body: SingleChildScrollView(
@@ -135,10 +141,10 @@ class _AddNewTrainingScreenState extends State<AddNewTrainingScreen> {
                   ),
                 ),
                 DropdownButtonFormField<String>(
-                  value: _selectedWeekday,
+                  value: selectedWeekDay,
                   onChanged: (value) {
                     setState(() {
-                      _selectedWeekday = value!;
+                      selectedWeekDay = value!;
                     });
                   },
                   items: [
@@ -201,7 +207,7 @@ class _AddNewTrainingScreenState extends State<AddNewTrainingScreen> {
                     String title = _titleController.text;
                     String description = _descriptionController.text;
                     String videoLink = _videoLinkController.text;
-                    String weekday = _selectedWeekday;
+                    String weekday = selectedWeekDay;
                     print('Title: $title');
                     print('Description: $description');
                     print('Video Link: $videoLink');
@@ -214,7 +220,7 @@ class _AddNewTrainingScreenState extends State<AddNewTrainingScreen> {
                         day: weekday,
                         description: description,
                         title: title,
-                        isCompleted: false,
+                        isCompleted: 0,
                         video: videoLink);
                     service.createNewTraining(
                         training: training, token: user.token);

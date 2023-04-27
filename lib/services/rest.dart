@@ -128,7 +128,8 @@ class DataService {
 
   Future<Training> createNewTraining(
       {required Training training, required String token}) async {
-    final json = await post('coaches/createTraining', data: training, token: token);
+    final json =
+        await post('coaches/createTraining', data: training, token: token);
     return Training.fromJson(json);
   }
 
@@ -140,6 +141,7 @@ class DataService {
         .toList();
     return list;
   }
+
   Future<List<Customer>> getCustomers(
       {required String token, required String typeOfTraining}) async {
     final listJson = await get("customers/$typeOfTraining", token);
@@ -147,6 +149,21 @@ class DataService {
         .map((itemJson) => Customer.fromJson(itemJson))
         .toList();
     return list;
+  }
+
+  Future<List<Training>> getCustomerTraining(
+      {required int customerId, required String token}) async {
+    try {
+      final listJson = await get("customers/training/$customerId", token);
+      final list = (listJson as List)
+          .map((itemJson) => Training.fromJson(itemJson))
+          .toList();
+      return list;
+    } catch (e) {
+      print(e);
+      List<Training> t = [];
+      return t;
+    }
   }
 
   Future<Carousel> createCarousel(

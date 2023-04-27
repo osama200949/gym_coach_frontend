@@ -16,7 +16,7 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   UserProvider userProvider = UserProvider();
   DataService service = DataService();
-  String insertedEmail = "os@gmail.com";
+  String insertedEmail = "coach@gmail.com";
   String insertedPassword = "123456";
   @override
   Widget build(BuildContext context) {
