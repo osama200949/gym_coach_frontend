@@ -23,15 +23,20 @@ class Training {
       required this.coachName   
       });
 
-//   Training.fromJson(Map<String, dynamic> json)
-//       : this(
-//           id: json['id'],
-//           title: json['title'],
-//           description: json['description'],
-//           image: json['image'],
-//         );
+  Training.fromJson(Map<String, dynamic> json)
+      : this(
+          id: json['id'],
+          title: json['title'],
+          description: json['description'],
+          day: json['day'],
+          video: json['video'],
+          isCompleted: json['isCompleted'],
+          coachId: json['coachId'],
+          customerId: json['customerId'],
+          coachName: json['coachName'],
+        );
 
-//   Map<String, dynamic> toJson() =>
-//       {'id': id, 'title': title, 'description': description, 'image': image};
-// }
+  Map<String, dynamic> toJson() =>
+      {'id': id, 'title': title, 'description': description, 'video': video, 'day':day,'isCompleted':isCompleted
+      ,'coachId':coachId, 'customerId':customerId, 'coachName':coachName};
 }

@@ -1,5 +1,13 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:todo_list/models/training.dart';
+import 'package:todo_list/provider/user_provider.dart';
+import 'package:todo_list/services/rest.dart';
 import 'package:todo_list/widgets/appbar.dart';
+
+import '../../provider/customer_provider.dart';
 
 class AddNewTrainingScreen extends StatefulWidget {
   const AddNewTrainingScreen({super.key});
@@ -13,11 +21,15 @@ class _AddNewTrainingScreenState extends State<AddNewTrainingScreen> {
   final TextEditingController _descriptionController = TextEditingController();
   final TextEditingController _videoLinkController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  String _selectedWeekday = 'Sunday'; //TODO: this should come from the previous page. 
+  String _selectedWeekday =
+      'Sunday'; //TODO: this should come from the previous page.
   @override
   Widget build(BuildContext context) {
+    DataService service = DataService();
+    final customer = Provider.of<CustomerProvider>(context, listen: true).get();
+    final user = Provider.of<UserProvider>(context, listen: true).get();
     return Scaffold(
-      appBar: CustomAppBar( context),
+      appBar: CustomAppBar(context),
       body: SingleChildScrollView(
         child: Padding(
           padding: EdgeInsets.all(20.0),
@@ -194,6 +206,19 @@ class _AddNewTrainingScreenState extends State<AddNewTrainingScreen> {
                     print('Description: $description');
                     print('Video Link: $videoLink');
                     print('Weekday: $weekday');
+                    Training training = Training(
+                        coachId: user.id,
+                        customerId: customer.id,
+                        coachName: user.name,
+                        id: 0,
+                        day: weekday,
+                        description: description,
+                        title: title,
+                        isCompleted: false,
+                        video: videoLink);
+                    service.createNewTraining(
+                        training: training, token: user.token);
+                    Navigator.pop(context);
                   },
                 ),
               ],

@@ -13,6 +13,7 @@ import 'package:todo_list/models/customer.dart';
 import 'package:todo_list/models/product.dart';
 import 'package:todo_list/models/user.dart';
 
+import '../models/training.dart';
 import '../models/training_coac.dart';
 
 class DataService {
@@ -123,6 +124,12 @@ class DataService {
         .map((itemJson) => Carousel.fromJson(itemJson))
         .toList();
     return list;
+  }
+
+  Future<Training> createNewTraining(
+      {required Training training, required String token}) async {
+    final json = await post('coaches/createTraining', data: training, token: token);
+    return Training.fromJson(json);
   }
 
   Future<List<TrainingCoach>> getCoaches(
