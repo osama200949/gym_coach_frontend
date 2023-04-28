@@ -4,6 +4,8 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:todo_list/main.dart';
 import 'package:todo_list/screen/customer/customer_chat.dart';
 import 'package:todo_list/screen/customer/customer_profile.dart';
+
+import 'customer_training.dart';
 class CustomerHomeScreen extends StatefulWidget {
   const CustomerHomeScreen({Key? key}) : super(key: key);
 
@@ -18,7 +20,7 @@ class _CustomerHomeScreenState extends State<CustomerHomeScreen> {
     // MyHomePage(title: "title"),
     // Text('Search'),
     CustomerChatScreen(),
-    Text('Notifications'),
+    CustomerTrainingScreen(),
     // Text('Profile'),
     CustomerProfileScreen(),
   ];

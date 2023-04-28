@@ -21,23 +21,6 @@ class CoachCustomerScreen extends StatefulWidget {
 }
 
 class _CoachCustomerScreenState extends State<CoachCustomerScreen> {
-  // List<Training> trainings = [
-  //   Training(
-  //     title: "The Bodybuilder's Back Workout for Beginners testing 2",
-  //     description:
-  //         "Wide grip pull-down 3 sets of 12 reps Grip the bar with shoulder-width palms facing away and your arms fully extended above your head. Do not lean back as you pull the bar to the top of your chest and hold it there for two seconds. Control the bar as it pulls itself back to the start position, aiming for a three second ascent with no pause at the top of the movement.",
-  //     day: "Sunday",
-  //     video:
-  //         "https://www.youtube.com/watch?v=t-h0T3dE8t4&pp=ygUVYm9keSBidWlsZGVyIHRyYWluaW5n",
-  //     isCompleted: 0,
-  //     coachId: 2,
-  //     customerId: 3,
-  //     coachName: "Osama Abdalla",
-  //   ),
-  // ];
-  // final String videoUrl =
-  //     "https://www.youtube.com/watch?v=t-h0T3dE8t4&pp=ygUVYm9keSBidWlsZGVyIHRyYWluaW5n";
-
   @override
   Widget build(BuildContext context) {
     final trainingProvider =

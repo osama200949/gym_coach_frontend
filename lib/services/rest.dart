@@ -81,7 +81,8 @@ class DataService {
       return false;
     }
   }
-  Future<bool> deleteTraining({required int id,required String token}) async {
+
+  Future<bool> deleteTraining({required int id, required String token}) async {
     final response = await http.delete(
       Uri.parse(
         '$baseUrl/training/$id',
@@ -118,6 +119,29 @@ class DataService {
     }
     var response = await Dio().post(
       '$baseUrl/carousels/${carousel.id}',
+      data: body,
+      options: Options(
+          headers: {"Authorization": "Bearer $token"},
+          followRedirects: false,
+          validateStatus: (status) {
+            return status! < 500;
+          }),
+    );
+    print(response.statusCode);
+    if (response.statusCode == 200) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  Future<bool> setTrainingIsCompleted(
+      {required String token, required int completed, required int id}) async {
+    var body = FormData.fromMap({
+      "isCompleted": completed,
+    });
+    var response = await Dio().post(
+      '$baseUrl/training/isCompleted/${id}',
       data: body,
       options: Options(
           headers: {"Authorization": "Bearer $token"},
