@@ -81,6 +81,22 @@ class DataService {
       return false;
     }
   }
+  Future<bool> deleteTraining({required int id,required String token}) async {
+    final response = await http.delete(
+      Uri.parse(
+        '$baseUrl/training/$id',
+      ),
+      headers: {
+        'Authorization': 'Bearer $token',
+      },
+    );
+    print(response.statusCode);
+    if (response.statusCode == 200) {
+      return true;
+    } else {
+      return false;
+    }
+  }
 
   Future<bool> editCarousel(Carousel carousel, String token) async {
     var body;

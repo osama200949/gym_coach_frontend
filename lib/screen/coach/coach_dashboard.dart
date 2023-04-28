@@ -9,6 +9,7 @@ import 'package:todo_list/services/rest.dart';
 import '../../models/customer.dart';
 import '../../models/user.dart';
 import '../../provider/user_provider.dart';
+import '../../widgets/appbar.dart';
 
 class DashboardScreen extends StatelessWidget {
   @override
@@ -108,7 +109,7 @@ class MyComponent1 extends StatelessWidget {
                     } else if (coaches[i].typeOfTraining == 'Calisthenics') {
                       numCalithnics++;
                     } else if (coaches[i].typeOfTraining == 'Comprehensive') {
-                      numCalithnics++;
+                      numComperhansive++;
                     } else {
                       numOthers++;
                     }
@@ -418,66 +419,4 @@ class MyComponent4 extends StatelessWidget {
       ),
     );
   }
-}
-
-// class MyComponent4 extends StatelessWidget {
-//   @override
-//   Widget build(BuildContext context) {
-//     return Container(
-//       padding: EdgeInsets.all(16),
-//       child: Column(
-//         crossAxisAlignment: CrossAxisAlignment.start,
-//         children: [
-//           Text(
-//             'Component 4',
-//             style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-//           ),
-//           SizedBox(height: 16),
-//           Text(
-//             'Expenses',
-//             style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-//           ),
-//           SizedBox(height: 16),
-//           Container(
-//             height: 200,
-//             // child: CupertinoPieChart(
-//             //   [
-//             //     MapEntry('Food', 0.25),
-//             //     MapEntry('Rent', 0.20),
-//             //     MapEntry('Transportation', 0.15),
-//             //     MapEntry('Entertainment', 0.10),
-//             //     MapEntry('Utilities', 0.10),
-//             //     MapEntry('Others', 0.20),
-//             //   ],
-//             //   key: ValueKey('myPieChart'),
-//             //   radius: 100,
-//             //   legend: true,
-//             // ),
-//           ),
-//         ],
-//       ),
-//     );
-//   }
-// }
-
-final appbarLogo = Row(
-  mainAxisAlignment: MainAxisAlignment.start,
-  children: [
-    Text(
-      "Gym",
-      style: TextStyle(color: Colors.deepOrange, fontSize: 20),
-    ),
-    Text(
-      "Coach",
-      style: TextStyle(color: Colors.black, fontSize: 20),
-    ),
-  ],
-);
-
-AppBar Appbar() {
-  return AppBar(
-    title: appbarLogo,
-    backgroundColor: Colors.white,
-    elevation: 0,
-  );
 }

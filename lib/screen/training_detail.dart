@@ -1,24 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:todo_list/models/training.dart';
+import 'package:todo_list/services/rest.dart';
 import 'package:todo_list/widgets/appbar.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:video_player/video_player.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 import '../provider/training_provider.dart';
+import '../provider/user_provider.dart';
 
 class TrainingDetailsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Training training =
         Provider.of<TrainingProvider>(context, listen: true).get();
+    final user = Provider.of<UserProvider>(context, listen: true).get();
+    DataService service = DataService();
 
     String videoId = YoutubePlayer.convertUrlToId(
-            "https://www.youtube.com/watch?v=t-h0T3dE8t4&pp=ygUVYm9keSBidWlsZGVyIHRyYWluaW5n")
+            training.video as String)
         as String;
     return Scaffold(
-      appBar: CustomAppBar(  context),
+      appBar: CustomAppBar(context),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
@@ -63,15 +67,66 @@ class TrainingDetailsScreen extends StatelessWidget {
           ),
         ],
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () async {
-          await launch(
-              training.video as String);
-        },
-        child: Icon(
-          Icons.play_arrow,
-        ),
-      ),
+      floatingActionButton: user.role == 1
+          ? Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                FloatingActionButton(
+                  onPressed: () {
+                    showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: Text('Are you sure you want to delete?'),
+                            actions: [
+                              TextButton(
+                                onPressed: () => Navigator.pop(context),
+                                child: Text(
+                                  'Cancel',
+                                  style: TextStyle(color: Colors.black),
+                                ),
+                              ),
+                              TextButton(
+                                onPressed: () {
+                                  service.deleteTraining(
+                                      id: training.id, token: user.token);
+                                      Navigator.pop(context);
+                                      Navigator.pop(context);
+                                },
+                                child: Text(
+                                  'Delete',
+                                  style: TextStyle(color: Colors.red),
+                                ),
+                              ),
+                            ],
+                          );
+                        });
+                  },
+                  child: Icon(
+                    Icons.delete,
+                  ),
+                ),
+                SizedBox(
+                  width: 30,
+                ),
+                FloatingActionButton(
+                  onPressed: () async {
+                    await launch(training.video as String);
+                  },
+                  child: Icon(
+                    Icons.play_arrow,
+                  ),
+                ),
+              ],
+            )
+          : FloatingActionButton(
+              onPressed: () async {
+                await launch(training.video as String);
+              },
+              child: Icon(
+                Icons.play_arrow,
+              ),
+            ),
     );
   }
 }
