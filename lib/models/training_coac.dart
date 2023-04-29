@@ -8,6 +8,8 @@ class TrainingCoach {
   String email;
   String gender;
   int age;
+  double height;
+  double weight;
   String typeOfTraining;
 
   TrainingCoach(
@@ -17,6 +19,8 @@ class TrainingCoach {
       required this.name,
       required this.gender,
       required this.age,
+      required this.height,
+      required this.weight,
       required this.typeOfTraining,
       });
 
@@ -28,6 +32,8 @@ class TrainingCoach {
           email: json['email'],
           gender: json['gender'],
           age: int.parse(json['age'].toString()),
+          height: double.parse(json['height'].toString()),
+          weight: double.parse(json['weight'].toString()),
           typeOfTraining: json['typeOfTraining'],
         );
 
