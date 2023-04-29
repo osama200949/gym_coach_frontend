@@ -1,4 +1,4 @@
-# todo_list
+# Gym_Coach mobile app
 
 A new Flutter project.
 
