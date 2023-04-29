@@ -1,0 +1,68 @@
+{
+  "project_info": {
+    "project_number": "550785033921",
+    "project_id": "gym-coach-59fa7",
+    "storage_bucket": "gym-coach-59fa7.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:550785033921:android:7a0cc0d538d70d1d20d640",
+        "android_client_info": {
+          "package_name": "com.example.image"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "550785033921-i9ntm405s31vk9joo34envq4isffbo0g.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBQlovSNzpdAma9HaOopn67Mh-Z48MGHtU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "550785033921-i9ntm405s31vk9joo34envq4isffbo0g.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:550785033921:android:03ede95bf54b574420d640",
+        "android_client_info": {
+          "package_name": "com.example.todo_list"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "550785033921-i9ntm405s31vk9joo34envq4isffbo0g.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBQlovSNzpdAma9HaOopn67Mh-Z48MGHtU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "550785033921-i9ntm405s31vk9joo34envq4isffbo0g.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
