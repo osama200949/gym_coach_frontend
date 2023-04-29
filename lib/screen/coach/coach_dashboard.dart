@@ -228,7 +228,7 @@ class MyComponent2 extends StatelessWidget {
                   int numCompleted = 0;
                   int numUncompleted = 0;
                   for (var i = 0; i < trainings.length; i++) {
-                    if (trainings[i].isCompleted == "Body builder") {
+                    if (trainings[i].isCompleted == 1) {
                       numCompleted++;
                     } else {
                       numUncompleted++;
