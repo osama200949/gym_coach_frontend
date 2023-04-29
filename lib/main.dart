@@ -1,3 +1,5 @@
+import 'package:firebase_core/firebase_core.dart';
+
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -25,7 +27,9 @@ import 'package:todo_list/widgets/snackbar.dart';
 import './services/rest.dart';
 import 'package:image/image.dart' as image;
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(MultiProvider(
     providers: [
       ChangeNotifierProvider(create: (context) => UserProvider()),
@@ -51,7 +55,10 @@ class MyApp extends StatelessWidget {
       routes: {
         // When navigating to the "/" route, build the FirstScreen widget.
         '/login': (context) => LoginScreen(),
-        '/chat': (context) => StreamDataWidget(firstParam: '2',secondParam: '3',),
+        '/chat': (context) => StreamDataWidget(
+              firstParam: '2',
+              secondParam: '3',
+            ),
         // '/test': (context) => DropdownButtonApp(),
         // When navigating to the "/second" route, build the SecondScreen widget.
         // '/home': (context) => const MyHomePage(
@@ -60,14 +67,16 @@ class MyApp extends StatelessWidget {
         '/trainingDetailPage': (context) => TrainingDetailsScreen(),
         '/addNewTraining': (context) => AddNewTrainingScreen(),
         '/coachCustomerPage': (context) => CoachCustomerScreen(),
-        
-        
-        
+
         '/customerHomePage': (context) => const CustomerHomeScreen(),
         '/coachHomePage': (context) => const CoachHomeScreen(),
         '/customerProfilePage': (context) => const CustomerProfileScreen(),
-        '/customerRegister': (context) =>  RegisterScreen(role: 0,),
-        '/coachRegister': (context) => RegisterScreen(role: 1,),
+        '/customerRegister': (context) => RegisterScreen(
+              role: 0,
+            ),
+        '/coachRegister': (context) => RegisterScreen(
+              role: 1,
+            ),
       },
     );
   }

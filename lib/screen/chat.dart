@@ -1,45 +1,55 @@
-import 'dart:async';
-import 'dart:convert';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'dart:async';
 
-class StreamDataWidget extends StatelessWidget {
+class StreamDataWidget extends StatefulWidget {
   final String firstParam;
   final String secondParam;
 
-  StreamDataWidget({required this.firstParam, required this.secondParam});
+  const StreamDataWidget(
+      {required this.firstParam, required this.secondParam, Key? key})
+      : super(key: key);
+
+  @override
+  State<StreamDataWidget> createState() => _StreamDataWidgetState();
+}
+
+class _StreamDataWidgetState extends State<StreamDataWidget> {
+  final Stream<QuerySnapshot> _chatStream =
+      FirebaseFirestore.instance.collection('chat_messages').snapshots();
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder(
-      stream: getDataStream(),
-      builder: (BuildContext context, AsyncSnapshot<http.Response> snapshot) {
-        if (snapshot.hasData) {
-
-          print(snapshot.data!.body);
-          List data = [];
-          final listJsonData = jsonDecode(snapshot.data!.body) ;
-          for (var line in listJsonData) {
-             Map item = line;
-            data.add(item);
+    return Scaffold(
+      body: StreamBuilder(
+        stream: _chatStream,
+        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+          if (snapshot.hasError) {
+            return const Text('Something went wrong');
           }
-          print(data.length);
-          print(data[0]);
-          return ListView.builder(
-            itemCount: data.length,
-            itemBuilder: (BuildContext context, int index) {
-              return Text(data[index]['message']);
-            },
+
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Text("Loading");
+          }
+
+          return ListView(
+            children: snapshot.data!.docs.map((DocumentSnapshot document) {
+              Map<String, dynamic> data =
+                  document.data()! as Map<String, dynamic>;
+              return ListTile(
+                title: Text(data['message'] ?? ""),
+              );
+            }).toList(),
           );
-        } else {
-          return CircularProgressIndicator();
-        }
-      },
+        },
+      ),
     );
   }
 
   Stream<http.Response> getDataStream() async* {
-    final response = await http.get(Uri.parse('http://10.0.2.2:8000/api/chats/$firstParam/$secondParam'));
+    final response = await http.get(Uri.parse(
+        'http://192.168.0.103:8080/api/chats/${widget.firstParam}/${widget.secondParam}'));
     yield response;
   }
 }
