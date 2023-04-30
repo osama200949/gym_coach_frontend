@@ -12,7 +12,8 @@ import 'package:todo_list/provider/training_provider.dart';
 import 'package:todo_list/provider/user_provider.dart';
 import 'package:todo_list/provider/weekday_provider.dart';
 import 'package:todo_list/screen/coach/add_new_training.dart';
-import 'package:todo_list/screen/chat.dart';
+import 'package:todo_list/screen/coach/coach_actual_chat.dart';
+import 'package:todo_list/screen/customer/customer_actual_chat.dart';
 import 'package:todo_list/screen/coach/coach_home.dart';
 import 'package:todo_list/screen/coach/coach_training.dart';
 import 'package:todo_list/screen/customer/customer_home.dart';
@@ -57,7 +58,8 @@ class MyApp extends StatelessWidget {
       routes: {
         // When navigating to the "/" route, build the FirstScreen widget.
         '/login': (context) => LoginScreen(),
-        '/chat': (context) => CustomerActualChatScreen(),
+        '/customerChatPage': (context) => CustomerActualChatScreen(),
+        '/coachChatPage': (context) => CoachActualChatScreen(),
         // '/test': (context) => DropdownButtonApp(),
         // When navigating to the "/second" route, build the SecondScreen widget.
         // '/home': (context) => const MyHomePage(

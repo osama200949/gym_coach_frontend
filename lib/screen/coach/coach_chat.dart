@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:todo_list/models/coach.dart';
 import 'package:todo_list/models/customer.dart';
 import 'package:todo_list/models/user.dart';
+import 'package:todo_list/provider/customer_provider.dart';
 import 'package:todo_list/provider/user_provider.dart';
 import 'package:todo_list/services/rest.dart';
 
@@ -20,6 +21,7 @@ class _CoachChatScreenState extends State<CoachChatScreen> {
   @override
   Widget build(BuildContext context) {
  final user = Provider.of<UserProvider>(context, listen: true).get();
+ final customerProvider = Provider.of<CustomerProvider>(context, listen: false);
     print("user role= ${user.typeOfTraining}");
     
     return FutureBuilder<List<Customer>>(
@@ -33,17 +35,18 @@ class _CoachChatScreenState extends State<CoachChatScreen> {
             return ListView.builder(
               itemCount: data.length,
               itemBuilder: (context, index) {
-                Customer coach = data[index];
+                Customer customer = data[index];
                 return ListTile(
                   onTap: (){
-                    Navigator.pushNamed(context, '/chat');
+                    customerProvider.set(customer);
+                    Navigator.pushNamed(context, '/coachChatPage');
                   },
                   leading: CircleAvatar(
                     backgroundImage: NetworkImage(
-                        "http://192.168.75.1/gym_coach/public/images/${coach.image}"),
+                        "http://192.168.75.1/gym_coach/public/images/${customer.image}"),
                   ),
-                  title: Text(coach.name),
-                  subtitle: Text(coach.email),
+                  title: Text(customer.name),
+                  subtitle: Text(customer.email),
                 );
               },
             );

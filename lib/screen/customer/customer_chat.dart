@@ -54,7 +54,7 @@ class _CustomerChatScreenState extends State<CustomerChatScreen> {
                   return ListTile(
                     onTap: () {
                       trainingCoachProvider.set(coach);
-                      Navigator.pushNamed(context, '/chat');
+                      Navigator.pushNamed(context, '/customerChatPage');
                     },
                     leading: CircleAvatar(
                       backgroundImage: NetworkImage(

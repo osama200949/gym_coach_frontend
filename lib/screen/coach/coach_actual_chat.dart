@@ -3,30 +3,29 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 import 'package:todo_list/bin/coach_provider.dart';
+import 'package:todo_list/provider/customer_provider.dart';
 import 'package:todo_list/provider/training_coach_provider.dart';
 import 'dart:async';
 
-import '../models/message.dart';
-import '../provider/user_provider.dart';
-import '../widgets/appbar.dart';
+import '../../models/message.dart';
+import '../../provider/user_provider.dart';
+import '../../widgets/appbar.dart';
 
-class CustomerActualChatScreen extends StatefulWidget {
-  const CustomerActualChatScreen({Key? key}) : super(key: key);
+class CoachActualChatScreen extends StatefulWidget {
+  const CoachActualChatScreen({Key? key}) : super(key: key);
 
   @override
-  State<CustomerActualChatScreen> createState() =>
-      _CustomerActualChatScreenState();
+  State<CoachActualChatScreen> createState() => _CoachActualChatScreenState();
 }
 
-class _CustomerActualChatScreenState extends State<CustomerActualChatScreen> {
+class _CoachActualChatScreenState extends State<CoachActualChatScreen> {
   final Stream<QuerySnapshot> _chatStream =
       FirebaseFirestore.instance.collection('chat_messages').snapshots();
   TextEditingController _textController = TextEditingController();
   @override
   Widget build(BuildContext context) {
-    final customer = Provider.of<UserProvider>(context, listen: true).get();
-    final coach =
-        Provider.of<TrainingCoachProvider>(context, listen: true).get();
+    final coach = Provider.of<UserProvider>(context, listen: true).get();
+    final customer = Provider.of<CustomerProvider>(context, listen: true).get();
     return Scaffold(
       appBar: AppBar(
         iconTheme: IconThemeData(color: Colors.deepOrange),
@@ -36,7 +35,7 @@ class _CustomerActualChatScreenState extends State<CustomerActualChatScreen> {
         actions: [
           CircleAvatar(
             backgroundImage: NetworkImage(
-                "http://192.168.75.1/gym_coach/public/images/${coach.image}"),
+                "http://192.168.75.1/gym_coach/public/images/${customer.image}"),
           ),
         ],
       ),
@@ -80,43 +79,48 @@ class _CustomerActualChatScreenState extends State<CustomerActualChatScreen> {
                         itemBuilder: (context, index) {
                           Message message = messages[index];
                           bool isSentByCurrentUser =
-                              message.senderId == customer.id.toString();
-                          if (!isSentByCurrentUser &&
-                                  message.senderId != coach.id.toString() ||
-                              message.text == "") {
+                              message.senderId == coach.id.toString();
+
+                          if (message.text == "") {
                             return Container();
                           }
-                          if (message.senderId != customer.id.toString() ||
-                              message.receiverId != coach.id.toString()) {
+                          if (isSentByCurrentUser &&
+                              message.receiverId != customer.id.toString()) {
                             return Container();
                           }
-                          return Row(
-                            mainAxisAlignment: isSentByCurrentUser
-                                ? MainAxisAlignment.end
-                                : MainAxisAlignment.start,
-                            children: [
-                              Container(
-                                margin: EdgeInsets.symmetric(
-                                    vertical: 4.0, horizontal: 8.0),
-                                padding: EdgeInsets.symmetric(
-                                    vertical: 8.0, horizontal: 16.0),
-                                decoration: BoxDecoration(
-                                  color: isSentByCurrentUser
-                                      ? Colors.blue
-                                      : Colors.grey[300],
-                                  borderRadius: BorderRadius.circular(16.0),
-                                ),
-                                child: Text(
-                                  message.text,
-                                  style: TextStyle(
+                          if (message.senderId == coach.id.toString() ||
+                              message.receiverId == customer.id.toString() ||
+                              message.senderId == customer.id.toString()) {
+                            return Row(
+                              mainAxisAlignment: isSentByCurrentUser
+                                  ? MainAxisAlignment.end
+                                  : MainAxisAlignment.start,
+                              children: [
+                                Container(
+                                  margin: EdgeInsets.symmetric(
+                                      vertical: 4.0, horizontal: 8.0),
+                                  padding: EdgeInsets.symmetric(
+                                      vertical: 8.0, horizontal: 16.0),
+                                  decoration: BoxDecoration(
                                     color: isSentByCurrentUser
-                                        ? Colors.white
-                                        : Colors.black,
+                                        ? Colors.blue
+                                        : Colors.grey[300],
+                                    borderRadius: BorderRadius.circular(16.0),
+                                  ),
+                                  child: Text(
+                                    message.text,
+                                    style: TextStyle(
+                                      color: isSentByCurrentUser
+                                          ? Colors.white
+                                          : Colors.black,
+                                    ),
                                   ),
                                 ),
-                              ),
-                            ],
-                          );
+                              ],
+                            );
+                          } else {
+                            Container();
+                          }
                         },
                       );
                     },
@@ -138,7 +142,7 @@ class _CustomerActualChatScreenState extends State<CustomerActualChatScreen> {
                         onPressed: () {
                           if (_textController.text != "") {
                             sendMessage(_textController.text,
-                                customer.id.toString(), coach.id.toString());
+                                coach.id.toString(), customer.id.toString());
                             _textController.clear();
                           }
                         },
@@ -159,7 +163,7 @@ class _CustomerActualChatScreenState extends State<CustomerActualChatScreen> {
       'text': text,
       'senderId': senderId,
       'receiverId': receiverId,
-      'timestamp': FieldValue.serverTimestamp() ?? Timestamp.now(),
+      'timestamp': FieldValue.serverTimestamp(),
     });
   }
 }
