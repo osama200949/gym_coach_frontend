@@ -3,7 +3,7 @@ import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:todo_list/main.dart';
 import 'package:todo_list/screen/customer/customer_chat.dart';
-import 'package:todo_list/screen/customer/customer_profile.dart';
+import 'package:todo_list/screen/profile.dart';
 
 import 'customer_training.dart';
 class CustomerHomeScreen extends StatefulWidget {
@@ -15,14 +15,15 @@ class CustomerHomeScreen extends StatefulWidget {
 
 class _CustomerHomeScreenState extends State<CustomerHomeScreen> {
   int _selectedIndex = 0;
-  static const List<Widget> _widgetOptions = <Widget>[
+  static List<Widget> _widgetOptions = <Widget>[
     Text('Home2'),
     // MyHomePage(title: "title"),
     // Text('Search'),
     CustomerChatScreen(),
     CustomerTrainingScreen(),
     // Text('Profile'),
-    CustomerProfileScreen(),
+    // CustomerProfileScreen(),
+    ProfileScreen(),
   ];
 
   void _onItemTapped(int index) {

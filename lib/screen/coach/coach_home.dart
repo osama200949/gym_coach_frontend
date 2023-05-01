@@ -4,7 +4,7 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:todo_list/main.dart';
 import 'package:todo_list/screen/coach/coach_chat.dart';
-import 'package:todo_list/screen/coach/coach_profile.dart';
+import 'package:todo_list/screen/profile.dart';
 import 'coach_customers.dart';
 import 'coach_dashboard.dart';
 
@@ -26,7 +26,7 @@ class _CoachHomeScreenState extends State<CoachHomeScreen> {
     // CoachCustomerScreen(),
     CoachCustomersScreen(),
     // Text('Profile'),
-    CoachProfileScreen(),
+    ProfileScreen(),
   ];
 
   void _onItemTapped(int index) {

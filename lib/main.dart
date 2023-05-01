@@ -17,7 +17,6 @@ import 'package:todo_list/screen/customer/customer_actual_chat.dart';
 import 'package:todo_list/screen/coach/coach_home.dart';
 import 'package:todo_list/screen/coach/coach_training.dart';
 import 'package:todo_list/screen/customer/customer_home.dart';
-import 'package:todo_list/screen/customer/customer_profile.dart';
 import 'package:todo_list/screen/register.dart';
 import 'package:todo_list/screen/login.dart';
 import 'package:todo_list/bin/customer_register.dart';
@@ -71,7 +70,6 @@ class MyApp extends StatelessWidget {
 
         '/customerHomePage': (context) => const CustomerHomeScreen(),
         '/coachHomePage': (context) => const CoachHomeScreen(),
-        '/customerProfilePage': (context) => const CustomerProfileScreen(),
         '/customerRegister': (context) => RegisterScreen(
               role: 0,
             ),

@@ -92,32 +92,35 @@ class _CustomerActualChatScreenState extends State<CustomerActualChatScreen> {
                             if (message.senderId == customer.id.toString() ||
                                 message.receiverId == coach.id.toString() ||
                                 message.senderId == coach.id.toString()) {
-                              return Row(
-                                mainAxisAlignment: isSentByCurrentUser
-                                    ? MainAxisAlignment.end
-                                    : MainAxisAlignment.start,
-                                children: [
-                                  Container(
-                                    margin: EdgeInsets.symmetric(
-                                        vertical: 4.0, horizontal: 8.0),
-                                    padding: EdgeInsets.symmetric(
-                                        vertical: 8.0, horizontal: 16.0),
-                                    decoration: BoxDecoration(
-                                      color: isSentByCurrentUser
-                                          ? Colors.blue
-                                          : Colors.grey[300],
-                                      borderRadius: BorderRadius.circular(16.0),
-                                    ),
-                                    child: Text(
-                                      message.text,
-                                      style: TextStyle(
+                              return Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: 20),
+                                child: Row(
+                                  mainAxisAlignment: isSentByCurrentUser
+                                      ? MainAxisAlignment.end
+                                      : MainAxisAlignment.start,
+                                  children: [
+                                    Container(
+                                      margin: EdgeInsets.symmetric(
+                                          vertical: 4.0, horizontal: 8.0),
+                                      padding: EdgeInsets.symmetric(
+                                          vertical: 8.0, horizontal: 16.0),
+                                      decoration: BoxDecoration(
                                         color: isSentByCurrentUser
-                                            ? Colors.white
-                                            : Colors.black,
+                                            ? Colors.blue
+                                            : Colors.grey[300],
+                                        borderRadius: BorderRadius.circular(16.0),
+                                      ),
+                                      child: Text(
+                                        message.text,
+                                        style: TextStyle(
+                                          color: isSentByCurrentUser
+                                              ? Colors.white
+                                              : Colors.black,
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                ],
+                                  ],
+                                ),
                               );
                             } else {
                               Container();
