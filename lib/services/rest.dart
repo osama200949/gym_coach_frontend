@@ -283,7 +283,7 @@ class DataService {
     });
     try {
       final response = await Dio().post('$baseUrl/login', data: body);
-      if (response.statusCode == 201) {
+      if (response.statusCode == 200) {
         print(response.data);
         final parsed = User.fromJson(response.data);
         print(parsed.email);
@@ -306,6 +306,55 @@ class DataService {
           image: "",
           email: "",
           name: "",
+          gender: "",
+          age: 0,
+          height: 0,
+          weight: 0,
+          typeOfTraining: "",
+          role: 0,
+          token: "");
+    }
+  }
+
+  Future<User> updateUser(User updatedUser) async {
+    var body;
+    if (updatedUser.image != null && updatedUser.image != "") {
+      String filepath = updatedUser.image as String;
+      String fileName = filepath.split('/login').last;
+      print(filepath);
+      body = FormData.fromMap({
+        "id": updatedUser.id,
+        "image": await MultipartFile.fromFile(filepath, filename: fileName),
+        "name": updatedUser.name,
+        "age": updatedUser.age,
+        "height": updatedUser.height,
+        "weight": updatedUser.weight,
+        "typeOfTraining": updatedUser.typeOfTraining,
+      });
+    } else {
+      body = FormData.fromMap({
+        "id": updatedUser.id,
+        "image": null,
+        "name": updatedUser.name,
+        "age": updatedUser.age,
+        "height": updatedUser.height,
+        "weight": updatedUser.weight,
+        "typeOfTraining": updatedUser.typeOfTraining,
+      });
+    }
+    try {
+      final response = await Dio().post('$baseUrl/updateUser', data: body);
+      print(response);
+      response.data['token'] = updatedUser.token;
+      final parsed = User.fromJson(response.data);
+      print(parsed);
+      return parsed;
+    } on DioError catch (e) {
+      print(e);
+      return User(
+          image: "",
+          name: "",
+          email: "",
           gender: "",
           age: 0,
           height: 0,
@@ -364,50 +413,6 @@ class DataService {
           token: "");
     }
   }
-
-  // Future<User> register(
-  //     {image,
-  //     name,
-  //     email,
-  //     gender,
-  //     age,
-  //     height,
-  //     weight,
-  //     typeOfTraining,
-  //     password,
-  //     password_confirmation}) async {
-  //   var body = FormData.fromMap({
-  //     "name": name,
-  //     "email": email,
-  //     "gender": gender,
-  //     "age": age,
-  //     "height": height,
-  //     "weight": weight,
-  //     "typeOfTraining": typeOfTraining,
-  //     "password": password,
-  //     "role": 0,
-  //     "password_confirmation": password_confirmation
-  //   });
-  //   try {
-  //     final response = await Dio().post('$baseUrl/register', data: body);
-  //     print(response);
-  //     final parsed = User.fromJson(response.data);
-  //     return parsed;
-  //   } on DioError catch (e) {
-  //     print(e);
-  //     return User(
-  //         image: "",
-  //         email: "",
-  //         name: "",
-  //         gender: "",
-  //         age: 0,
-  //         height: 0,
-  //         weight: 0,
-  //         typeOfTraining: "",
-  //         role: 0,
-  //         token: "");
-  //   }
-  // }
 
   Future<bool> logout(String token) async {
     try {

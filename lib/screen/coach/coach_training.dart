@@ -52,174 +52,184 @@ class _CoachCustomerScreenState extends State<CoachCustomerScreen> {
                       coachName: ""));
 
               int length = trainings.length;
-              return SingleChildScrollView(
-                child: Column(
-                  children: [
-                    for (var i = 0; i < 7; i++)
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Text(
-                              _getWeekdayName(i),
-                              style: Theme.of(context).textTheme.headline6,
+              return RefreshIndicator(
+                onRefresh: () async {
+                  await service.getCustomerTraining(
+                      customerId: customer.id, token: user.token);
+                  setState(() {});
+                },
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      for (var i = 0; i < 7; i++)
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Text(
+                                _getWeekdayName(i),
+                                style: Theme.of(context).textTheme.headline6,
+                              ),
                             ),
-                          ),
-                          Container(
-                            height: 250,
-                            // color: Colors.red,
-                            child: ListView.builder(
-                              scrollDirection: Axis.horizontal,
-                              itemCount: trainings.length,
-                              itemBuilder: (context, index) {
-                                if (index == 0) {
-                                  return Container(
-                                    width: 250,
-                                    margin: const EdgeInsets.all(8.0),
-                                    decoration: BoxDecoration(
-                                      border: Border.all(color: Colors.grey),
-                                      borderRadius: BorderRadius.circular(8.0),
-                                      // color: Colors.yellow
-                                    ),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        InkWell(
-                                          onTap: () {
-                                            weekday.set(_getWeekdayName(i));
-                                            Navigator.pushNamed(
-                                                context, "/addNewTraining");
-                                          },
-                                          child: Container(
-                                              width: 150,
-                                              height: 150,
-                                              // color: Colors.yellow,
-                                              decoration: BoxDecoration(
-                                                // border: Border.all(color: Colors.grey),
-                                                color: Colors.white,
-                                                boxShadow: [
-                                                  BoxShadow(
-                                                    color: Colors.grey,
-                                                    blurRadius:
-                                                        2.0, // soften the shadow
-                                                    spreadRadius:
-                                                        0.1, //extend the shadow
-                                                    offset: Offset(
-                                                      -5.0, // Move to right 5  horizontally
-                                                      10.0, // Move to bottom 5 Vertically
+                            Container(
+                              height: 250,
+                              // color: Colors.red,
+                              child: ListView.builder(
+                                scrollDirection: Axis.horizontal,
+                                itemCount: trainings.length,
+                                itemBuilder: (context, index) {
+                                  if (index == 0) {
+                                    return Container(
+                                      width: 250,
+                                      margin: const EdgeInsets.all(8.0),
+                                      decoration: BoxDecoration(
+                                        border: Border.all(color: Colors.grey),
+                                        borderRadius:
+                                            BorderRadius.circular(8.0),
+                                        // color: Colors.yellow
+                                      ),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          InkWell(
+                                            onTap: () {
+                                              weekday.set(_getWeekdayName(i));
+                                              Navigator.pushNamed(
+                                                  context, "/addNewTraining");
+                                            },
+                                            child: Container(
+                                                width: 150,
+                                                height: 150,
+                                                // color: Colors.yellow,
+                                                decoration: BoxDecoration(
+                                                  // border: Border.all(color: Colors.grey),
+                                                  color: Colors.white,
+                                                  boxShadow: [
+                                                    BoxShadow(
+                                                      color: Colors.grey,
+                                                      blurRadius:
+                                                          2.0, // soften the shadow
+                                                      spreadRadius:
+                                                          0.1, //extend the shadow
+                                                      offset: Offset(
+                                                        -5.0, // Move to right 5  horizontally
+                                                        10.0, // Move to bottom 5 Vertically
+                                                      ),
                                                     ),
-                                                  ),
-                                                ],
-                                                borderRadius:
-                                                    BorderRadius.circular(
-                                                        100.0),
-                                              ),
-                                              child: Icon(
-                                                Icons.add,
-                                                color: Colors.deepOrange,
-                                                size: 130,
-                                              )),
-                                        )
-                                      ],
-                                    ),
-                                  );
-                                } else {
-                                  String videoId = YoutubePlayer.convertUrlToId(
-                                          trainings[index].video as String)
-                                      as String;
-                                  String incomingDay = trainings[index].day;
-
-                                  if (incomingDay == _getWeekdayName(i)) {
-                                    return InkWell(
-                                      onTap: () {
-                                        trainingProvider.set(trainings[index]);
-                                        Navigator.pushNamed(
-                                            context, "/trainingDetailPage");
-                                      },
-                                      child: Container(
-                                        width: 250,
-                                        margin: const EdgeInsets.all(8.0),
-                                        decoration: BoxDecoration(
-                                          border:
-                                              Border.all(color: Colors.grey),
-                                          borderRadius:
-                                              BorderRadius.circular(8.0),
-                                          // color: Colors.yellow
-                                        ),
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            YoutubePlayerBuilder(
-                                              player: YoutubePlayer(
-                                                controller:
-                                                    YoutubePlayerController(
-                                                  initialVideoId:
-                                                      videoId as String,
-                                                  flags: YoutubePlayerFlags(
-                                                    mute: true,
-                                                    autoPlay: false,
-                                                    hideControls: true,
-                                                    disableDragSeek: true,
-                                                    loop: false,
-                                                  ),
+                                                  ],
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          100.0),
                                                 ),
-                                              ),
-                                              builder: (context, player) {
-                                                return player;
-                                              },
-                                            ),
-                                            Padding(
-                                              padding:
-                                                  const EdgeInsets.fromLTRB(
-                                                      5, 5, 0, 0),
-                                              child: Text(
-                                                trainings[index].title,
-                                                style: TextStyle(
-                                                    fontWeight:
-                                                        FontWeight.bold),
-                                              ),
-                                            ),
-                                            SizedBox(
-                                              height: 10,
-                                            ),
-                                            Padding(
-                                              padding:
-                                                  const EdgeInsets.fromLTRB(
-                                                      5, 0, 0, 0),
-                                              child: Text(
-                                                "Status: ${trainings[index].isCompleted == 1 ? 'Completed' : 'Not complete'}",
-                                              ),
-                                            ),
-                                            SizedBox(
-                                              height: 5,
-                                            ),
-                                            Padding(
-                                              padding:
-                                                  const EdgeInsets.fromLTRB(
-                                                      5, 0, 0, 0),
-                                              child: Text(
-                                                "Coach name: ${trainings[index].coachName}",
-                                              ),
-                                            )
-                                          ],
-                                        ),
+                                                child: Icon(
+                                                  Icons.add,
+                                                  color: Colors.deepOrange,
+                                                  size: 130,
+                                                )),
+                                          )
+                                        ],
                                       ),
                                     );
                                   } else {
-                                    return Container();
+                                    String videoId =
+                                        YoutubePlayer.convertUrlToId(
+                                            trainings[index].video
+                                                as String) as String;
+                                    String incomingDay = trainings[index].day;
+
+                                    if (incomingDay == _getWeekdayName(i)) {
+                                      return InkWell(
+                                        onTap: () {
+                                          trainingProvider
+                                              .set(trainings[index]);
+                                          Navigator.pushNamed(
+                                              context, "/trainingDetailPage");
+                                        },
+                                        child: Container(
+                                          width: 250,
+                                          margin: const EdgeInsets.all(8.0),
+                                          decoration: BoxDecoration(
+                                            border:
+                                                Border.all(color: Colors.grey),
+                                            borderRadius:
+                                                BorderRadius.circular(8.0),
+                                            // color: Colors.yellow
+                                          ),
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              YoutubePlayerBuilder(
+                                                player: YoutubePlayer(
+                                                  controller:
+                                                      YoutubePlayerController(
+                                                    initialVideoId:
+                                                        videoId as String,
+                                                    flags: YoutubePlayerFlags(
+                                                      mute: true,
+                                                      autoPlay: false,
+                                                      hideControls: true,
+                                                      disableDragSeek: true,
+                                                      loop: false,
+                                                    ),
+                                                  ),
+                                                ),
+                                                builder: (context, player) {
+                                                  return player;
+                                                },
+                                              ),
+                                              Padding(
+                                                padding:
+                                                    const EdgeInsets.fromLTRB(
+                                                        5, 5, 0, 0),
+                                                child: Text(
+                                                  trainings[index].title,
+                                                  style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold),
+                                                ),
+                                              ),
+                                              SizedBox(
+                                                height: 10,
+                                              ),
+                                              Padding(
+                                                padding:
+                                                    const EdgeInsets.fromLTRB(
+                                                        5, 0, 0, 0),
+                                                child: Text(
+                                                  "Status: ${trainings[index].isCompleted == 1 ? 'Completed' : 'Not complete'}",
+                                                ),
+                                              ),
+                                              SizedBox(
+                                                height: 5,
+                                              ),
+                                              Padding(
+                                                padding:
+                                                    const EdgeInsets.fromLTRB(
+                                                        5, 0, 0, 0),
+                                                child: Text(
+                                                  "Coach name: ${trainings[index].coachName}",
+                                                ),
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                      );
+                                    } else {
+                                      return Container();
+                                    }
                                   }
-                                }
-                              },
+                                },
+                              ),
                             ),
-                          ),
-                        ],
-                      ),
-                  ],
+                          ],
+                        ),
+                    ],
+                  ),
                 ),
               );
             } else {

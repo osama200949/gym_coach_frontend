@@ -5,6 +5,7 @@ import 'package:todo_list/main.dart';
 import 'package:todo_list/screen/customer/customer_chat.dart';
 import 'package:todo_list/screen/profile.dart';
 
+import 'customer_landing.dart';
 import 'customer_training.dart';
 class CustomerHomeScreen extends StatefulWidget {
   const CustomerHomeScreen({Key? key}) : super(key: key);
@@ -16,7 +17,8 @@ class CustomerHomeScreen extends StatefulWidget {
 class _CustomerHomeScreenState extends State<CustomerHomeScreen> {
   int _selectedIndex = 0;
   static List<Widget> _widgetOptions = <Widget>[
-    Text('Home2'),
+    // Text('Home2'),
+    CustomerLandingScreen(),
     // MyHomePage(title: "title"),
     // Text('Search'),
     CustomerChatScreen(),

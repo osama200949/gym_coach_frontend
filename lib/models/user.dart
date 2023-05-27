@@ -28,16 +28,16 @@ class User {
 
   User.fromJson(Map<dynamic, dynamic> json)
       : this(
-          id: json['user']['id'],
-          image: json['user']['image'],
-          name: json['user']['name'],
-          email: json['user']['email'],
-          gender: json['user']['gender'],
-          age: int.parse(json['user']['age'].toString()),
-          height: double.parse(json['user']['height'].toString()),
-          weight: double.parse(json['user']['weight'].toString()),
-          typeOfTraining: json['user']['typeOfTraining'],
-          role: int.parse(json['user']['role'].toString()),
+          id: json['id'],
+          image: json['image'],
+          name: json['name'],
+          email: json['email'],
+          gender: json['gender'],
+          age: int.parse(json['age'].toString()),
+          height: double.parse(json['height'].toString()),
+          weight: double.parse(json['weight'].toString()),
+          typeOfTraining: json['typeOfTraining'],
+          role: int.parse(json['role'].toString()),
           token: json['token'],
         );
 

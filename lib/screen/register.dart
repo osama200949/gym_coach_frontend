@@ -42,8 +42,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
   double weight = 0;
   String insertedPassword = "";
   String insertedPasswordConfirmation = "";
-  File? _image;
   String _defaultImage = "assets/images/profile.png";
+  File? _image;
 
   Future pickImage() async {
     FilePickerResult? result = await FilePicker.platform.pickFiles(
