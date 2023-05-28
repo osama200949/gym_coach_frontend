@@ -13,6 +13,7 @@ import 'package:todo_list/provider/user_provider.dart';
 import 'package:todo_list/provider/weekday_provider.dart';
 import 'package:todo_list/screen/coach/add_new_training.dart';
 import 'package:todo_list/screen/coach/coach_actual_chat.dart';
+import 'package:todo_list/screen/coach/coach_training_detail.dart';
 import 'package:todo_list/screen/customer/customer_actual_chat.dart';
 import 'package:todo_list/screen/coach/coach_home.dart';
 import 'package:todo_list/screen/coach/coach_training.dart';
@@ -21,7 +22,7 @@ import 'package:todo_list/screen/register.dart';
 import 'package:todo_list/screen/login.dart';
 import 'package:todo_list/bin/customer_register.dart';
 import 'package:todo_list/screen/test.dart';
-import 'package:todo_list/screen/training_detail.dart';
+import 'package:todo_list/screen/customer/customer_training_detail.dart';
 import 'package:todo_list/widgets/create_bottom_sheet.dart';
 import 'package:todo_list/widgets/edit_bottom_sheet.dart';
 import 'package:todo_list/widgets/snackbar.dart';
@@ -64,7 +65,8 @@ class MyApp extends StatelessWidget {
         // '/home': (context) => const MyHomePage(
         //       title: 'Gym coach',
         //     ),
-        '/trainingDetailPage': (context) => TrainingDetailsScreen(),
+        '/coachTrainingDetailPage': (context) => CoachTrainingDetailScreen(),
+        '/trainingDetailPage': (context) => CustomerTrainingDetailsScreen(),
         '/addNewTraining': (context) => AddNewTrainingScreen(),
         '/coachCustomerPage': (context) => CoachCustomerScreen(),
 

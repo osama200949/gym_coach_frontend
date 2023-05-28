@@ -7,18 +7,19 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:video_player/video_player.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
-import '../provider/training_provider.dart';
-import '../provider/user_provider.dart';
+import '../../provider/training_provider.dart';
+import '../../provider/user_provider.dart';
 
-class TrainingDetailsScreen extends StatefulWidget {
+class CustomerTrainingDetailsScreen extends StatefulWidget {
   @override
-  State<TrainingDetailsScreen> createState() => _TrainingDetailsScreenState();
+  State<CustomerTrainingDetailsScreen> createState() => _CustomerTrainingDetailsScreenState();
 }
 
-class _TrainingDetailsScreenState extends State<TrainingDetailsScreen>
+class _CustomerTrainingDetailsScreenState extends State<CustomerTrainingDetailsScreen>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   bool _isCompleted = false;
+  bool _isEditing = false;
 
   @override
   void initState() {
@@ -35,6 +36,8 @@ class _TrainingDetailsScreenState extends State<TrainingDetailsScreen>
 
   @override
   Widget build(BuildContext context) {
+    bool keyboardIsOpen = MediaQuery.of(context).viewInsets.bottom != 0;
+    final trainingProvider = Provider.of<TrainingProvider>(context,listen: true);
     final Training training =
         Provider.of<TrainingProvider>(context, listen: true).get();
     final user = Provider.of<UserProvider>(context, listen: true).get();
@@ -44,6 +47,7 @@ class _TrainingDetailsScreenState extends State<TrainingDetailsScreen>
         if (training.isCompleted == 1) {
           _controller.forward();
           training.isCompleted = 0;
+          trainingProvider.set(training);
           service.setTrainingIsCompleted(
               token: user.token,
               completed: training.isCompleted,
@@ -51,6 +55,7 @@ class _TrainingDetailsScreenState extends State<TrainingDetailsScreen>
         } else {
           _controller.reverse();
           training.isCompleted = 1;
+          trainingProvider.set(training);
           service.setTrainingIsCompleted(
               token: user.token,
               completed: training.isCompleted,
@@ -61,115 +66,6 @@ class _TrainingDetailsScreenState extends State<TrainingDetailsScreen>
 
     String videoId =
         YoutubePlayer.convertUrlToId(training.video as String) as String;
-    if (user.role == 1) {
-      return Scaffold(
-        appBar: CustomAppBar(context),
-        body: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            YoutubePlayerBuilder(
-              player: YoutubePlayer(
-                controller: YoutubePlayerController(
-                  initialVideoId: videoId as String,
-                  flags: YoutubePlayerFlags(
-                    mute: true,
-                    autoPlay: false,
-                    hideControls: true,
-                    disableDragSeek: true,
-                    loop: false,
-                  ),
-                ),
-              ),
-              builder: (context, player) {
-                return player;
-              },
-            ),
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    "Coach: ${training.coachName}",
-                    style: Theme.of(context).textTheme.bodySmall,
-                  ),
-                  SizedBox(height: 8),
-                  Text(
-                    training.title,
-                    style: Theme.of(context).textTheme.headline6,
-                  ),
-                  SizedBox(height: 8),
-                  Text(
-                    training.description,
-                    style: Theme.of(context).textTheme.bodyText2,
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-        floatingActionButton: user.role == 1
-            ? Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  FloatingActionButton(
-                    onPressed: () {
-                      showDialog(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return AlertDialog(
-                              title: Text('Are you sure you want to delete?'),
-                              actions: [
-                                TextButton(
-                                  onPressed: () => Navigator.pop(context),
-                                  child: Text(
-                                    'Cancel',
-                                    style: TextStyle(color: Colors.black),
-                                  ),
-                                ),
-                                TextButton(
-                                  onPressed: () {
-                                    service.deleteTraining(
-                                        id: training.id, token: user.token);
-                                    Navigator.pop(context);
-                                    Navigator.pop(context);
-                                  },
-                                  child: Text(
-                                    'Delete',
-                                    style: TextStyle(color: Colors.red),
-                                  ),
-                                ),
-                              ],
-                            );
-                          });
-                    },
-                    child: Icon(
-                      Icons.delete,
-                    ),
-                  ),
-                  SizedBox(
-                    width: 30,
-                  ),
-                  FloatingActionButton(
-                    onPressed: () async {
-                      await launch(training.video as String);
-                    },
-                    child: Icon(
-                      Icons.play_arrow,
-                    ),
-                  ),
-                ],
-              )
-            : FloatingActionButton(
-                onPressed: () async {
-                  await launch(training.video as String);
-                },
-                child: Icon(
-                  Icons.play_arrow,
-                ),
-              ),
-      );
-    } else {
       return Scaffold(
         appBar: CustomAppBar(context),
         body: Column(
@@ -266,6 +162,6 @@ class _TrainingDetailsScreenState extends State<TrainingDetailsScreen>
           ),
         ),
       );
-    }
+    
   }
 }

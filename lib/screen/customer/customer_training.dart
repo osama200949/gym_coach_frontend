@@ -24,7 +24,7 @@ class _CustomerTrainingScreenState extends State<CustomerTrainingScreen> {
   @override
   Widget build(BuildContext context) {
     final trainingProvider =
-        Provider.of<TrainingProvider>(context, listen: false);
+        Provider.of<TrainingProvider>(context, listen: true);
     // final customer = Provider.of<CustomerProvider>(context, listen: true).get();
     final user = Provider.of<UserProvider>(context, listen: true).get();
     final weekday = Provider.of<WeekdayProvider>(context, listen: false);

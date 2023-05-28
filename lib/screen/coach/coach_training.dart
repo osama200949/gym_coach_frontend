@@ -24,7 +24,7 @@ class _CoachCustomerScreenState extends State<CoachCustomerScreen> {
   @override
   Widget build(BuildContext context) {
     final trainingProvider =
-        Provider.of<TrainingProvider>(context, listen: false);
+        Provider.of<TrainingProvider>(context, listen: true);
     final customer = Provider.of<CustomerProvider>(context, listen: true).get();
     final user = Provider.of<UserProvider>(context, listen: true).get();
     final weekday = Provider.of<WeekdayProvider>(context, listen: false);
@@ -147,7 +147,7 @@ class _CoachCustomerScreenState extends State<CoachCustomerScreen> {
                                           trainingProvider
                                               .set(trainings[index]);
                                           Navigator.pushNamed(
-                                              context, "/trainingDetailPage");
+                                              context, "/coachTrainingDetailPage");
                                         },
                                         child: Container(
                                           width: 250,

@@ -173,7 +173,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   role: user.role, // unchanged
                                   id: user.id, // unchanged
                                   token: user.token, // unchanged
-                                ));
+                                ),user.token);
 
                                 setState(() {
                                   Provider.of<UserProvider>(context, listen: false).set(newUser);

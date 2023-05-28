@@ -316,7 +316,46 @@ class DataService {
     }
   }
 
-  Future<User> updateUser(User updatedUser) async {
+  Future<Training> updateTraining(
+      Training updatedTraining, String token) async {
+    var body = FormData.fromMap({
+      "id": updatedTraining.id,
+      "title": updatedTraining.title,
+      "description": updatedTraining.description,
+      "video": updatedTraining.video,
+    });
+    try {
+      final response = await Dio().post(
+        '$baseUrl/updateTraining',
+        data: body,
+        options: Options(
+            headers: {"Authorization": "Bearer $token"},
+            followRedirects: false,
+            validateStatus: (status) {
+              return status! < 500;
+            }),
+      );
+      print(response);
+      final parsed = Training.fromJson(response.data);
+      print(parsed);
+      return parsed;
+    } on DioError catch (e) {
+      print(e);
+      return Training(
+        id: 0,
+        coachId: 0,
+        customerId: 0,
+        coachName: "",
+        day: "",
+        description: "",
+        isCompleted: 0,
+        title: "",
+        video: "",
+      );
+    }
+  }
+
+  Future<User> updateUser(User updatedUser, String token) async {
     var body;
     if (updatedUser.image != null && updatedUser.image != "") {
       String filepath = updatedUser.image as String;
@@ -343,7 +382,16 @@ class DataService {
       });
     }
     try {
-      final response = await Dio().post('$baseUrl/updateUser', data: body);
+      final response = await Dio().post(
+        '$baseUrl/updateUser',
+        data: body,
+        options: Options(
+            headers: {"Authorization": "Bearer $token"},
+            followRedirects: false,
+            validateStatus: (status) {
+              return status! < 500;
+            }),
+      );
       print(response);
       response.data['token'] = updatedUser.token;
       final parsed = User.fromJson(response.data);
