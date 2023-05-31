@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:todo_list/main.dart';
 import 'package:todo_list/screen/customer/customer_chat.dart';
 import 'package:todo_list/screen/profile.dart';
@@ -57,8 +58,8 @@ class _CustomerHomeScreenState extends State<CustomerHomeScreen> {
             label: 'Chat',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.sports_gymnastics),
-            label: 'training',
+            icon: Icon(FontAwesomeIcons.dumbbell),
+            label: 'Training',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.person),

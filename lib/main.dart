@@ -14,6 +14,8 @@ import 'package:todo_list/provider/weekday_provider.dart';
 import 'package:todo_list/screen/coach/add_new_training.dart';
 import 'package:todo_list/screen/coach/coach_actual_chat.dart';
 import 'package:todo_list/screen/coach/coach_training_detail.dart';
+import 'package:todo_list/screen/customer/customer_activity.dart';
+import 'package:todo_list/screen/customer/customer_activity_detail.dart';
 import 'package:todo_list/screen/customer/customer_actual_chat.dart';
 import 'package:todo_list/screen/coach/coach_home.dart';
 import 'package:todo_list/screen/coach/coach_training.dart';
@@ -59,6 +61,8 @@ class MyApp extends StatelessWidget {
       routes: {
         // When navigating to the "/" route, build the FirstScreen widget.
 
+        '/activityDetailPage': (context) => CustomerActivityDetailScreen(),
+        '/customerActivityPage': (context) => CustomerActivityScreen(),
         '/customerTrophyPage': (context) => CustomerTrophyScreen(),
         '/login': (context) => LoginScreen(),
         '/customerChatPage': (context) => CustomerActualChatScreen(),

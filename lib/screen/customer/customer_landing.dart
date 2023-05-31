@@ -83,10 +83,29 @@ class CustomerLandingScreen extends StatelessWidget {
             ),
             ListTile(
               leading: IconButton(
-                icon: Icon(FontAwesomeIcons.trophy),
-                  color: Colors.red,
+                icon: Icon(FontAwesomeIcons.userGroup),
+                color: Colors.red,
                 onPressed: () {
-
+                  Navigator.pushNamed(context, '/customerActivityPage');
+                },
+              ),
+              title: Text("Group activities"),
+              onTap: () {
+                Navigator.pushNamed(context, '/customerActivityPage');
+              },
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 25),
+              child: Divider(
+                thickness: 2,
+              ),
+            ),
+            ListTile(
+              leading: IconButton(
+                icon: Icon(FontAwesomeIcons.trophy),
+                color: Colors.red,
+                onPressed: () {
+                  Navigator.pushNamed(context, '/customerTrophyPage');
                 },
               ),
               title: Text("Prizes"),
@@ -96,7 +115,9 @@ class CustomerLandingScreen extends StatelessWidget {
             ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 25),
-              child: Divider(thickness: 2,),
+              child: Divider(
+                thickness: 2,
+              ),
             ),
             ListTile(
               leading: IconButton(
@@ -105,8 +126,8 @@ class CustomerLandingScreen extends StatelessWidget {
                   color: Colors.red,
                 ),
                 onPressed: () {
-                service.logout(user.token);
-                Navigator.pushReplacementNamed(context, '/login');
+                  service.logout(user.token);
+                  Navigator.pushReplacementNamed(context, '/login');
                 },
               ),
               title: Text('Logout'),
