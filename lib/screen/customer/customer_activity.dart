@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:todo_list/models/training.dart';
+import 'package:todo_list/provider/activity_provider.dart';
 import 'package:todo_list/provider/training_provider.dart';
 import 'package:todo_list/provider/user_provider.dart';
 import 'package:todo_list/provider/weekday_provider.dart';
@@ -10,6 +11,7 @@ import 'package:todo_list/services/rest.dart';
 import 'package:todo_list/widgets/appbar_with_no_back_btn.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
+import '../../models/activity.dart';
 import '../../provider/customer_provider.dart';
 import '../../widgets/appbar.dart';
 
@@ -23,8 +25,8 @@ class CustomerActivityScreen extends StatefulWidget {
 class _CustomerActivityScreenState extends State<CustomerActivityScreen> {
   @override
   Widget build(BuildContext context) {
-    final trainingProvider =
-        Provider.of<TrainingProvider>(context, listen: true);
+    final activityProvider =
+        Provider.of<ActivityProvider>(context, listen: false);
     final user = Provider.of<UserProvider>(context, listen: true).get();
     DataService service = DataService();
 
@@ -35,32 +37,28 @@ class _CustomerActivityScreenState extends State<CustomerActivityScreen> {
         backgroundColor: Colors.white,
         elevation: 0,
       ),
-      body: FutureBuilder<List<Training>>(
-          future: service.getCustomerTraining(
-              customerId: user.id, token: user.token),
+      body: FutureBuilder<List<Activity>>(
+          future: service.getAllActivities(token: user.token),
           builder: (context, snapshot) {
             if (snapshot.hasData) {
+              List<Activity> activities = snapshot.data as List<Activity>;
               print(snapshot.data);
               return RefreshIndicator(
                 onRefresh: () async {
-                  //Todo: change to getActivities
-                  await service.getCustomerTraining(
-                      customerId: user.id, token: user.token);
+                  await service.getAllActivities(
+                     token: user.token);
                   setState(() {});
                 },
                 child: ListView.builder(
                   scrollDirection: Axis.vertical,
-                  itemCount: 5,
+                  itemCount: activities.length,
                   itemBuilder: (context, index) {
-                    // TODO: replace it with the actual incoming date
-                    String originalDateHour = DateTime.now().hour.toString();
-                    String originalDate = DateTime.now().toString();
+                    String originalDate = activities[index].date.toString();
                     int spaceIndex = originalDate.indexOf(' ');
                     String date = originalDate.substring(0, spaceIndex);
                     return InkWell(
                       onTap: () {
-                        // Todo: Change to set activity
-                        // trainingProvider.set(trainings[index]);
+                        activityProvider.set(activities[index]);
                         Navigator.pushNamed(context, "/activityDetailPage");
                       },
                       child: Padding(
@@ -77,7 +75,10 @@ class _CustomerActivityScreenState extends State<CustomerActivityScreen> {
                             children: [
                               Container(
                                 height: 200,
-                                child: Image.network("http://192.168.75.1/gym_coach/public/images/${user.image}",fit: BoxFit.fill,),
+                                child: Image.network(
+                                  "http://192.168.75.1/gym_coach/public/images/${activities[index].image}",
+                                  fit: BoxFit.cover,
+                                ),
                               ),
                               Padding(
                                 padding: const EdgeInsets.fromLTRB(5, 5, 0, 0),
@@ -96,14 +97,17 @@ class _CustomerActivityScreenState extends State<CustomerActivityScreen> {
                                 ),
                               ),
                               SizedBox(
-                                height: 5,
+                                height: 10,
                               ),
                               Padding(
                                 padding: const EdgeInsets.fromLTRB(5, 0, 0, 0),
                                 child: Text(
-                                  "Coach name: Coach Osama",
+                                  "Coach name: ${activities[index].coachName}",
                                 ),
-                              )
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
                             ],
                           ),
                         ),
@@ -119,7 +123,6 @@ class _CustomerActivityScreenState extends State<CustomerActivityScreen> {
     );
   }
 }
-
 
 final appbarLogo = Row(
   mainAxisAlignment: MainAxisAlignment.start,

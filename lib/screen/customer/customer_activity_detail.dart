@@ -9,6 +9,7 @@ import 'package:video_player/video_player.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 import '../../models/customer.dart';
+import '../../provider/activity_provider.dart';
 import '../../provider/training_provider.dart';
 import '../../provider/user_provider.dart';
 
@@ -41,15 +42,11 @@ class _CustomerActivityDetailScreenState
 
   @override
   Widget build(BuildContext context) {
-    bool keyboardIsOpen = MediaQuery.of(context).viewInsets.bottom != 0;
-    final trainingProvider =
-        Provider.of<TrainingProvider>(context, listen: true);
-    final Training training =
-        Provider.of<TrainingProvider>(context, listen: true).get();
+    final activityProvider =
+        Provider.of<ActivityProvider>(context, listen: true).get();
     final user = Provider.of<UserProvider>(context, listen: true).get();
     DataService service = DataService();
-    String originalDateHour = DateTime.now().hour.toString();
-    String originalDate = DateTime.now().toString();
+    String originalDate =activityProvider.date.toString();
     int spaceIndex = originalDate.indexOf(' ');
     String date = originalDate.substring(0, spaceIndex);
     return Scaffold(
@@ -61,7 +58,7 @@ class _CustomerActivityDetailScreenState
             Container(
               height: 200,
               child: Image.network(
-                "http://192.168.75.1/gym_coach/public/images/${user.image}",
+                "http://192.168.75.1/gym_coach/public/images/${activityProvider.image}",
                 fit: BoxFit.cover,
               ),
             ),
@@ -71,7 +68,7 @@ class _CustomerActivityDetailScreenState
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "Coach: ${training.coachName}",
+                    "Coach: ${activityProvider.coachName}",
                     style: Theme.of(context).textTheme.bodySmall,
                   ),
                   SizedBox(
@@ -83,12 +80,12 @@ class _CustomerActivityDetailScreenState
                   ),
                   SizedBox(height: 8),
                   Text(
-                    training.title,
+                    activityProvider.title,
                     style: Theme.of(context).textTheme.headline6,
                   ),
                   SizedBox(height: 8),
                   Text(
-                    training.description,
+                    activityProvider.description,
                     style: Theme.of(context).textTheme.bodyText2,
                   ),
                 ],
@@ -105,8 +102,8 @@ class _CustomerActivityDetailScreenState
               ),
             ),
             FutureBuilder<List<Customer>>(
-                future: service.getCustomers(
-                    token: user.token, typeOfTraining: user.typeOfTraining),
+                future: service.getAllParticipants(
+                    token: user.token, activityId: activityProvider.id.toString()),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.done &&
                       snapshot.hasData) {
@@ -153,7 +150,8 @@ class _CustomerActivityDetailScreenState
             isRegistered == true ? isRegistered = false : isRegistered = true;
           });
         },
-        backgroundColor: Colors.white,
+        backgroundColor: !isRegistered
+            ?Colors.white : Colors.deepOrange,
 
         label: !isRegistered
             ? const Text(
@@ -162,7 +160,7 @@ class _CustomerActivityDetailScreenState
               )
             : const Text(
                 'Cancel',
-                style: TextStyle(color: Colors.deepOrange),
+                style: TextStyle(color: Colors.white),
               ),
         icon: !isRegistered
             ? const Icon(
@@ -171,7 +169,7 @@ class _CustomerActivityDetailScreenState
               )
             : const Icon(
                 Icons.cancel_outlined,
-                color: Colors.deepOrange,
+                color: Colors.white,
               ),
         // child: isRegistered
         //     ? Icon(

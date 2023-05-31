@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:todo_list/models/carousel.dart';
 import 'package:todo_list/models/product.dart';
 import 'package:todo_list/models/user.dart';
+import 'package:todo_list/provider/activity_provider.dart';
 import 'package:todo_list/provider/customer_provider.dart';
 import 'package:todo_list/provider/training_coach_provider.dart';
 import 'package:todo_list/provider/training_provider.dart';
@@ -37,6 +38,7 @@ void main() async {
   await Firebase.initializeApp();
   runApp(MultiProvider(
     providers: [
+      ChangeNotifierProvider(create: (context) => ActivityProvider()),
       ChangeNotifierProvider(create: (context) => UserProvider()),
       ChangeNotifierProvider(create: (context) => TrainingProvider()),
       ChangeNotifierProvider(create: (context) => CustomerProvider()),

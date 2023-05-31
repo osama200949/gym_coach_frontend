@@ -13,6 +13,7 @@ import 'package:todo_list/models/customer.dart';
 import 'package:todo_list/models/product.dart';
 import 'package:todo_list/models/user.dart';
 
+import '../models/activity.dart';
 import '../models/training.dart';
 import '../models/training_coac.dart';
 
@@ -173,6 +174,19 @@ class DataService {
     return Training.fromJson(json);
   }
 
+  Future<List<Activity>> getAllActivities({required String token}) async {
+    try {
+      final listJson = await get("allActivities", token);
+      final list = (listJson as List)
+          .map((itemJson) => Activity.fromJson(itemJson))
+          .toList();
+      return list;
+    } catch (e) {
+      print(e);
+      List<Activity> u = [];
+      return u;
+    }
+  }
   Future<List<TrainingCoach>> getAllCoaches({required String token}) async {
     try {
       final listJson = await get("allCoaches", token);
@@ -195,6 +209,14 @@ class DataService {
     return list;
   }
 
+  Future<List<Customer>> getAllParticipants(
+      {required String token, required String activityId}) async {
+    final listJson = await get("allParticipants/$activityId", token);
+    final list = (listJson as List)
+        .map((itemJson) => Customer.fromJson(itemJson))
+        .toList();
+    return list;
+  }
   Future<List<Customer>> getCustomers(
       {required String token, required String typeOfTraining}) async {
     final listJson = await get("customers/$typeOfTraining", token);
