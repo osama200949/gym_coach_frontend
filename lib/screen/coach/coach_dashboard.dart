@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:todo_list/models/coach.dart';
 import 'package:todo_list/models/training.dart';
@@ -32,13 +33,63 @@ class DashboardScreen extends StatelessWidget {
       drawer: Drawer(
         child: Column(
           children: [
+            Container(
+              // color: Colors.deepOrange,
+              decoration: BoxDecoration(color: Colors.deepOrange),
+              height: 200,
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(30.0, 40.0, 30.0, 10.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                          width: 75,
+                          height: 75,
+                          decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(50)),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Text(
+                                user.name.substring(0, 1),
+                                style: TextStyle(
+                                    color: Colors.deepOrange,
+                                    fontSize: 40,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                    Text(
+                      user.name,
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 22,
+                          fontWeight: FontWeight.bold),
+                    )
+                  ],
+                ),
+              ),
+            ),
             ListTile(
               leading: IconButton(
                 icon: Icon(
                   Icons.logout,
                   color: Colors.red,
                 ),
-                onPressed: () {},
+                onPressed: () {
+                service.logout(user.token);
+                Navigator.pushReplacementNamed(context, '/login');
+                },
               ),
               title: Text('Logout'),
               onTap: () {

@@ -18,6 +18,7 @@ import 'package:todo_list/screen/customer/customer_actual_chat.dart';
 import 'package:todo_list/screen/coach/coach_home.dart';
 import 'package:todo_list/screen/coach/coach_training.dart';
 import 'package:todo_list/screen/customer/customer_home.dart';
+import 'package:todo_list/screen/customer/customer_trophy.dart';
 import 'package:todo_list/screen/register.dart';
 import 'package:todo_list/screen/login.dart';
 import 'package:todo_list/bin/customer_register.dart';
@@ -57,6 +58,8 @@ class MyApp extends StatelessWidget {
       initialRoute: '/login',
       routes: {
         // When navigating to the "/" route, build the FirstScreen widget.
+
+        '/customerTrophyPage': (context) => CustomerTrophyScreen(),
         '/login': (context) => LoginScreen(),
         '/customerChatPage': (context) => CustomerActualChatScreen(),
         '/coachChatPage': (context) => CoachActualChatScreen(),
