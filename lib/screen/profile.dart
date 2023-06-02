@@ -76,8 +76,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       onTap: pickImage,
                       child: CircleAvatar(
                         radius: 70,
-                        backgroundImage: NetworkImage(
-                            "http://192.168.75.1/gym_coach/public/images/${user.image}"),
+                        backgroundImage: _image != null
+                            ? FileImage(_image!)
+                            : NetworkImage(
+                                ("http://192.168.75.1/gym_coach/public/images/${user.image}"),
+                              ) as ImageProvider,
                       ),
                     ),
                     SizedBox(height: 20),
@@ -161,22 +164,26 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             OutlinedButton(
                               onPressed: () async {
                                 // TODO: update the user data updateUser()
-                                User newUser = await service.updateUser(User(
-                                  image: _image?.path,
-                                  name: name,
-                                  age: age,
-                                  height: height,
-                                  weight: weight,
-                                  typeOfTraining: typeOfTraining,
-                                  email: user.email,  // unchanged
-                                  gender: user.gender, // unchanged
-                                  role: user.role, // unchanged
-                                  id: user.id, // unchanged
-                                  token: user.token, // unchanged
-                                ),user.token);
+                                User newUser = await service.updateUser(
+                                    User(
+                                      image: _image?.path,
+                                      name: name,
+                                      age: age,
+                                      height: height,
+                                      weight: weight,
+                                      typeOfTraining: typeOfTraining,
+                                      email: user.email, // unchanged
+                                      gender: user.gender, // unchanged
+                                      role: user.role, // unchanged
+                                      id: user.id, // unchanged
+                                      token: user.token, // unchanged
+                                    ),
+                                    user.token);
 
                                 setState(() {
-                                  Provider.of<UserProvider>(context, listen: false).set(newUser);
+                                  Provider.of<UserProvider>(context,
+                                          listen: false)
+                                      .set(newUser);
                                   _isEditing = false;
                                 });
                               },

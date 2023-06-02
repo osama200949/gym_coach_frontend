@@ -12,6 +12,7 @@ import 'package:todo_list/widgets/appbar_with_no_back_btn.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 import '../../models/activity.dart';
+import '../../models/customer.dart';
 import '../../provider/customer_provider.dart';
 import '../../widgets/appbar.dart';
 
@@ -45,8 +46,7 @@ class _CustomerActivityScreenState extends State<CustomerActivityScreen> {
               print(snapshot.data);
               return RefreshIndicator(
                 onRefresh: () async {
-                  await service.getAllActivities(
-                     token: user.token);
+                  await service.getAllActivities(token: user.token);
                   setState(() {});
                 },
                 child: ListView.builder(
@@ -57,8 +57,21 @@ class _CustomerActivityScreenState extends State<CustomerActivityScreen> {
                     int spaceIndex = originalDate.indexOf(' ');
                     String date = originalDate.substring(0, spaceIndex);
                     return InkWell(
-                      onTap: () {
+                      onTap: () async {
                         activityProvider.set(activities[index]);
+                        List<Customer> participants =
+                            await service.getAllParticipants(
+                                token: user.token,
+                                activityId: activities[index].id.toString());
+                        print(participants);
+                        participants.forEach((element) {
+                          if (element.id == user.id) {
+                            activityProvider.setIsRegistered(true);
+                            return;
+                          } else {
+                            activityProvider.setIsRegistered(false);
+                          }
+                        });
                         Navigator.pushNamed(context, "/activityDetailPage");
                       },
                       child: Padding(
@@ -128,7 +141,7 @@ final appbarLogo = Row(
   mainAxisAlignment: MainAxisAlignment.start,
   children: [
     Text(
-      "Activities",
+      "Group activities",
       style: TextStyle(color: Colors.black, fontSize: 20),
     ),
   ],

@@ -136,6 +136,62 @@ class DataService {
     }
   }
 
+  Future<bool> deleteParticipant(
+      {required String token,
+      required int userId,
+      required int activityId,
+      required String email}) async {
+    var body = FormData.fromMap({
+      "userId": userId.toString(),
+      "email": email,
+      "activityId": activityId.toString(),
+    });
+    var response = await Dio().post(
+      '$baseUrl/deleteParticipant',
+      data: body,
+      options: Options(
+          headers: {"Authorization": "Bearer $token"},
+          followRedirects: false,
+          validateStatus: (status) {
+            return status! < 500;
+          }),
+    );
+    print(response.statusCode);
+    if (response.statusCode == 200) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  Future<bool> addParticipant(
+      {required String token,
+      required int userId,
+      required int activityId,
+      required String email}) async {
+    var body = FormData.fromMap({
+      "userId": userId,
+      "email": email,
+      "activityId": activityId,
+    });
+    var response = await Dio().post(
+      '$baseUrl/addParticipant',
+      data: body,
+      options: Options(
+          headers: {"Authorization": "Bearer $token"},
+          followRedirects: false,
+          validateStatus: (status) {
+            return status! < 500;
+          }),
+    );
+    print(response.statusCode);
+    if (response.statusCode == 200) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   Future<bool> setTrainingIsCompleted(
       {required String token, required int completed, required int id}) async {
     var body = FormData.fromMap({
@@ -187,6 +243,7 @@ class DataService {
       return u;
     }
   }
+
   Future<List<TrainingCoach>> getAllCoaches({required String token}) async {
     try {
       final listJson = await get("allCoaches", token);
@@ -217,6 +274,7 @@ class DataService {
         .toList();
     return list;
   }
+
   Future<List<Customer>> getCustomers(
       {required String token, required String typeOfTraining}) async {
     final listJson = await get("customers/$typeOfTraining", token);

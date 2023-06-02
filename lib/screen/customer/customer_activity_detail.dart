@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:todo_list/models/training.dart';
@@ -46,9 +47,14 @@ class _CustomerActivityDetailScreenState
         Provider.of<ActivityProvider>(context, listen: true).get();
     final user = Provider.of<UserProvider>(context, listen: true).get();
     DataService service = DataService();
-    String originalDate =activityProvider.date.toString();
+
+    isRegistered =
+        Provider.of<ActivityProvider>(context, listen: true).getIsRegistered();
+
+    String originalDate = activityProvider.date.toString();
     int spaceIndex = originalDate.indexOf(' ');
     String date = originalDate.substring(0, spaceIndex);
+
     return Scaffold(
       appBar: CustomAppBar(context),
       body: SingleChildScrollView(
@@ -103,11 +109,13 @@ class _CustomerActivityDetailScreenState
             ),
             FutureBuilder<List<Customer>>(
                 future: service.getAllParticipants(
-                    token: user.token, activityId: activityProvider.id.toString()),
+                    token: user.token,
+                    activityId: activityProvider.id.toString()),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.done &&
                       snapshot.hasData) {
                     List<Customer> data = snapshot.data as List<Customer>;
+
                     return Container(
                       height: 400,
                       child: ListView.builder(
@@ -115,10 +123,7 @@ class _CustomerActivityDetailScreenState
                         itemBuilder: (context, index) {
                           Customer customer = data[index];
                           return ListTile(
-                            onTap: () {
-                              // customerProvider.set(data[index]);
-                              // Navigator.pushNamed(context, '/coachCustomerPage');
-                            },
+                            onTap: () {},
                             leading: CircleAvatar(
                               backgroundImage: NetworkImage(
                                   "http://192.168.75.1/gym_coach/public/images/${customer.image}"),
@@ -144,14 +149,26 @@ class _CustomerActivityDetailScreenState
         ),
       ),
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {
+        onPressed: () async {
           // Todo: add new participant to the list.
+          isRegistered
+              ? await service.deleteParticipant(
+                  token: user.token,
+                  userId: user.id,
+                  email: user.email,
+                  activityId: activityProvider.id)
+              : await service.addParticipant(
+                  token: user.token,
+                  userId: user.id,
+                  email: user.email,
+                  activityId: activityProvider.id);
           setState(() {
-            isRegistered == true ? isRegistered = false : isRegistered = true;
+            isRegistered = !isRegistered;
+            Provider.of<ActivityProvider>(context, listen: false)
+                .setIsRegistered(isRegistered);
           });
         },
-        backgroundColor: !isRegistered
-            ?Colors.white : Colors.deepOrange,
+        backgroundColor: !isRegistered ? Colors.white : Colors.deepOrange,
 
         label: !isRegistered
             ? const Text(
