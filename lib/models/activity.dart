@@ -4,21 +4,25 @@ class Activity {
   int id;
   String title;
   String description;
-  String image;
+  String? image;
   String coachName;
   DateTime date;
+  int coachId;
 
   Activity(
-      {required this.id,
+      { this.id = 0,
       required this.title,
       required this.description,
       required this.coachName,
       required this.image,
-      required this.date});
+      required this.date,
+      required this.coachId
+      });
 
   Activity.fromJson(Map<String, dynamic> json)
       : this(
           id: json['id'],
+          coachId: int.parse(json['coachId']) ,
           title: json['title'],
           description: json['description'],
           coachName: json['coachName'],
@@ -28,6 +32,7 @@ class Activity {
 
   Map<String, dynamic> toJson() => {
         'id': id,
+        'coachId': coachId,
         'title': title,
         'description': description,
         'coachName': coachName,

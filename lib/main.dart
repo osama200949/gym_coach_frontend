@@ -12,7 +12,10 @@ import 'package:todo_list/provider/training_coach_provider.dart';
 import 'package:todo_list/provider/training_provider.dart';
 import 'package:todo_list/provider/user_provider.dart';
 import 'package:todo_list/provider/weekday_provider.dart';
+import 'package:todo_list/screen/coach/add_new_activity.dart';
 import 'package:todo_list/screen/coach/add_new_training.dart';
+import 'package:todo_list/screen/coach/coach_activity.dart';
+import 'package:todo_list/screen/coach/coach_activity_detail.dart';
 import 'package:todo_list/screen/coach/coach_actual_chat.dart';
 import 'package:todo_list/screen/coach/coach_training_detail.dart';
 import 'package:todo_list/screen/customer/customer_activity.dart';
@@ -66,14 +69,18 @@ class MyApp extends StatelessWidget {
         '/activityDetailPage': (context) => CustomerActivityDetailScreen(),
         '/customerActivityPage': (context) => CustomerActivityScreen(),
         '/customerTrophyPage': (context) => CustomerTrophyScreen(),
-        '/login': (context) => LoginScreen(),
         '/customerChatPage': (context) => CustomerActualChatScreen(),
         '/coachChatPage': (context) => CoachActualChatScreen(),
+        '/login': (context) => LoginScreen(),
         // '/test': (context) => DropdownButtonApp(),
         // When navigating to the "/second" route, build the SecondScreen widget.
         // '/home': (context) => const MyHomePage(
         //       title: 'Gym coach',
         //     ),
+        '/addNewActivity': (context) => AddNewActivityScreen(),
+        '/coachActivityPage': (context) => CoachActivityScreen(),
+        '/coachActivityDetailPage': (context) => CoachActivityDetailScreen(),
+
         '/coachTrainingDetailPage': (context) => CoachTrainingDetailScreen(),
         '/trainingDetailPage': (context) => CustomerTrainingDetailsScreen(),
         '/addNewTraining': (context) => AddNewTrainingScreen(),

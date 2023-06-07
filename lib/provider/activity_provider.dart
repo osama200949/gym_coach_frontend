@@ -5,7 +5,7 @@ import 'package:todo_list/models/user.dart';
 import '../models/activity.dart';
 
 class ActivityProvider extends ChangeNotifier{
-  Activity _activity = Activity(id: 0, date: DateTime.now(),description: "",image: "",title: "",coachName: "");
+  Activity _activity = Activity(id: 0,coachId: 1, date: DateTime.now(),description: "",image: "",title: "",coachName: "");
   bool _isRegistered = false;
 
   void setIsRegistered(bool isR){

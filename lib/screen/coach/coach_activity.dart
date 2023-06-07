@@ -16,14 +16,14 @@ import '../../models/customer.dart';
 import '../../provider/customer_provider.dart';
 import '../../widgets/appbar.dart';
 
-class CustomerActivityScreen extends StatefulWidget {
-  const CustomerActivityScreen({super.key});
+class CoachActivityScreen extends StatefulWidget {
+  const CoachActivityScreen({super.key});
 
   @override
-  State<CustomerActivityScreen> createState() => _CustomerActivityScreenState();
+  State<CoachActivityScreen> createState() => _CoachActivityScreenState();
 }
 
-class _CustomerActivityScreenState extends State<CustomerActivityScreen> {
+class _CoachActivityScreenState extends State<CoachActivityScreen> {
   @override
   Widget build(BuildContext context) {
     final activityProvider =
@@ -72,7 +72,8 @@ class _CustomerActivityScreenState extends State<CustomerActivityScreen> {
                             activityProvider.setIsRegistered(false);
                           }
                         });
-                        Navigator.pushNamed(context, "/activityDetailPage");
+                        Navigator.pushNamed(
+                            context, "/coachActivityDetailPage");
                       },
                       child: Padding(
                         padding: const EdgeInsets.all(15.0),
@@ -133,6 +134,15 @@ class _CustomerActivityScreenState extends State<CustomerActivityScreen> {
               return Center(child: CircularProgressIndicator());
             }
           }),
+      floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            Navigator.pushNamed(context, '/addNewActivity');
+          },
+          backgroundColor: Colors.white,
+          child: Icon(
+            Icons.add,
+            color: Colors.deepOrange,
+          )),
     );
   }
 }

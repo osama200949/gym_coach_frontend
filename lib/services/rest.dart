@@ -347,6 +347,37 @@ class DataService {
     }
   }
 
+  Future<bool> createNewActivity(Activity activity, String token) async {
+    String filepath = activity.image as String;
+    String fileName = filepath.split('/login').last;
+
+    var body = FormData.fromMap({
+      "title": activity.title,
+      "description": activity.description,
+      "image": await MultipartFile.fromFile(filepath, filename: fileName),
+      "date": activity.date,
+      "coachId": activity.coachId,
+      "coachName": activity.coachName,
+    });
+
+    var response = await Dio().post(
+      '$baseUrl/createNewActivity',
+      data: body,
+      options: Options(
+          headers: {"Authorization": "Bearer $token"},
+          followRedirects: false,
+          validateStatus: (status) {
+            return status! < 500;
+          }),
+    );
+    print(response.statusCode);
+    if (response.statusCode == 200) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   //! Product
   Future<List<Product>> getProducts(String token) async {
     final listJson = await get("products", token);

@@ -37,6 +37,7 @@ dependencies:
   firebase_core: ^2.10.0
   flutter:
     sdk: flutter
+  flutter_datetime_picker: ^1.5.1
   font_awesome_flutter: ">= 4.7.0"
   gender_picker: ^1.1.0
   http: ^0.13.5

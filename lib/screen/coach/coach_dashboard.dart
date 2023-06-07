@@ -82,13 +82,33 @@ class DashboardScreen extends StatelessWidget {
             ),
             ListTile(
               leading: IconButton(
+                icon: Icon(FontAwesomeIcons.userGroup),
+                color: Colors.red,
+                onPressed: () {
+                  Navigator.pushNamed(context, '/coachActivityPage');
+                },
+              ),
+              title: Text("Group activities"),
+              onTap: () {
+                Navigator.pushNamed(context, '/coachActivityPage');
+              },
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 25),
+              child: Divider(
+                thickness: 2,
+              ),
+            ),
+
+            ListTile(
+              leading: IconButton(
                 icon: Icon(
                   Icons.logout,
                   color: Colors.red,
                 ),
                 onPressed: () {
-                service.logout(user.token);
-                Navigator.pushReplacementNamed(context, '/login');
+                  service.logout(user.token);
+                  Navigator.pushReplacementNamed(context, '/login');
                 },
               ),
               title: Text('Logout'),
@@ -285,9 +305,9 @@ class MyComponent2 extends StatelessWidget {
                       numUncompleted++;
                     }
                   }
-                  double completedPercentage =
-                      numCompleted / trainings.length;
-                  double uncompletedPercentage = numUncompleted / trainings.length;
+                  double completedPercentage = numCompleted / trainings.length;
+                  double uncompletedPercentage =
+                      numUncompleted / trainings.length;
 
                   return Row(
                     children: [
