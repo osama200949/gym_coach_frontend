@@ -3,7 +3,7 @@ import 'dart:io';
 
 class Customer {
   int id;
-  String ?image;
+  String? image;
   String name;
   String email;
   String gender;
@@ -11,22 +11,25 @@ class Customer {
   double height;
   double weight;
   String typeOfTraining;
+  int points;
 
-  Customer(
-      {this.id = 0,
-      required this.email,
-      required this.image,
-      required this.name,
-      required this.gender,
-      required this.age,
-      required this.height,
-      required this.weight,
-      required this.typeOfTraining,
-      });
+  Customer({
+    this.id = 0,
+    this.points = 0,
+    required this.email,
+    required this.image,
+    required this.name,
+    required this.gender,
+    required this.age,
+    required this.height,
+    required this.weight,
+    required this.typeOfTraining,
+  });
 
   Customer.fromJson(Map<dynamic, dynamic> json)
       : this(
           id: json['id'],
+          points: json['points'],
           image: json['image'],
           name: json['name'],
           email: json['email'],

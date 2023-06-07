@@ -20,8 +20,7 @@ class CoachActivityDetailScreen extends StatefulWidget {
       _CoachActivityDetailScreenState();
 }
 
-class _CoachActivityDetailScreenState
-    extends State<CoachActivityDetailScreen>
+class _CoachActivityDetailScreenState extends State<CoachActivityDetailScreen>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   bool _isCompleted = false;
@@ -115,7 +114,8 @@ class _CoachActivityDetailScreenState
                   if (snapshot.connectionState == ConnectionState.done &&
                       snapshot.hasData) {
                     List<Customer> data = snapshot.data as List<Customer>;
-
+                    Provider.of<ActivityProvider>(context, listen: false)
+                        .setParticipants(data);
                     return Container(
                       height: 400,
                       child: ListView.builder(
@@ -148,8 +148,13 @@ class _CoachActivityDetailScreenState
           ],
         ),
       ),
-      floatingActionButton: activityProvider.coachId == user.id ? FloatingActionButton.extended(onPressed: (){}, label: Text('Mark as complete'))
-      : null,
+      floatingActionButton: activityProvider.coachId == user.id
+          ? FloatingActionButton.extended(
+              onPressed: () {
+                Navigator.pushNamed(context, '/evaluationPage');
+              },
+              label: Text('Mark as complete'))
+          : null,
     );
   }
 }

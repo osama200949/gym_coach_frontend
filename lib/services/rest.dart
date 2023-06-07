@@ -192,6 +192,27 @@ class DataService {
     }
   }
 
+  Future<bool> uploadAllThePoints(
+      List<Customer> customers, String token) async {
+  customers.forEach((customer) async{
+    var body = FormData.fromMap({
+      "points": customer.points,
+    });
+    var response = await Dio().post(
+      '$baseUrl/updatePoints/${customer.id}',
+      data: body,
+      options: Options(
+          headers: {"Authorization": "Bearer $token"},
+          followRedirects: false,
+          validateStatus: (status) {
+            return status! < 500;
+          }),
+    );
+    print(response.statusCode);
+
+   });
+  return true;
+  }
   Future<bool> setTrainingIsCompleted(
       {required String token, required int completed, required int id}) async {
     var body = FormData.fromMap({
@@ -278,6 +299,14 @@ class DataService {
   Future<List<Customer>> getCustomers(
       {required String token, required String typeOfTraining}) async {
     final listJson = await get("customers/$typeOfTraining", token);
+    final list = (listJson as List)
+        .map((itemJson) => Customer.fromJson(itemJson))
+        .toList();
+    return list;
+  }
+  Future<List<Customer>> getAllCustomers(
+      {required String token}) async {
+    final listJson = await get("customers", token);
     final list = (listJson as List)
         .map((itemJson) => Customer.fromJson(itemJson))
         .toList();

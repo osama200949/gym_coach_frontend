@@ -17,6 +17,7 @@ import 'package:todo_list/screen/coach/add_new_training.dart';
 import 'package:todo_list/screen/coach/coach_activity.dart';
 import 'package:todo_list/screen/coach/coach_activity_detail.dart';
 import 'package:todo_list/screen/coach/coach_actual_chat.dart';
+import 'package:todo_list/screen/coach/coach_evaluation.dart';
 import 'package:todo_list/screen/coach/coach_training_detail.dart';
 import 'package:todo_list/screen/customer/customer_activity.dart';
 import 'package:todo_list/screen/customer/customer_activity_detail.dart';
@@ -66,6 +67,7 @@ class MyApp extends StatelessWidget {
       routes: {
         // When navigating to the "/" route, build the FirstScreen widget.
 
+        '/evaluationPage': (context) => EvaluationScreen(),
         '/activityDetailPage': (context) => CustomerActivityDetailScreen(),
         '/customerActivityPage': (context) => CustomerActivityScreen(),
         '/customerTrophyPage': (context) => CustomerTrophyScreen(),
@@ -264,8 +266,6 @@ class _MyHomePageState extends State<MyHomePage> {
                             height: 65,
                             child: Image.network(
                               "http://192.168.75.1/example-app/public/images/${_carousels[index].image}",
-                              // height: 60.0,
-                              // width: 60.0,
                             ),
                           ),
                           //! Delete

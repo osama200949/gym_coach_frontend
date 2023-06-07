@@ -12,9 +12,12 @@ class User {
   String typeOfTraining;
   int role;
   String token;
+  int points;
 
   User(
-      {this.id = 0,
+      {
+        this.id = 0,
+        this.points = 0,
       required this.image,
       required this.email,
       required this.name,
@@ -29,6 +32,7 @@ class User {
   User.fromJson(Map<dynamic, dynamic> json)
       : this(
           id: json['id'],
+          points: json['points'],
           image: json['image'],
           name: json['name'],
           email: json['email'],
