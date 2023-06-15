@@ -94,7 +94,9 @@ class _EvaluationScreenState extends State<EvaluationScreen> {
               backgroundColor: Colors.white,
               onPressed: () async {
                 service.uploadAllThePoints(participants, user.token);
-                Navigator.pushReplacementNamed(context, '/coachActivityPage');
+                Navigator.pop(context);
+                Navigator.pop(context);
+                // Navigator.pushReplacementNamed(context, '/coachActivityPage');
               },
               label: Text(
                 'Submit all points',

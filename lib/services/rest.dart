@@ -10,6 +10,7 @@ import 'dart:convert';
 import 'package:todo_list/models/carousel.dart';
 import 'package:todo_list/models/coach.dart';
 import 'package:todo_list/models/customer.dart';
+import 'package:todo_list/models/prize.dart';
 import 'package:todo_list/models/product.dart';
 import 'package:todo_list/models/user.dart';
 
@@ -194,25 +195,25 @@ class DataService {
 
   Future<bool> uploadAllThePoints(
       List<Customer> customers, String token) async {
-  customers.forEach((customer) async{
-    var body = FormData.fromMap({
-      "points": customer.points,
+    customers.forEach((customer) async {
+      var body = FormData.fromMap({
+        "points": customer.points,
+      });
+      var response = await Dio().post(
+        '$baseUrl/updatePoints/${customer.id}',
+        data: body,
+        options: Options(
+            headers: {"Authorization": "Bearer $token"},
+            followRedirects: false,
+            validateStatus: (status) {
+              return status! < 500;
+            }),
+      );
+      print(response.statusCode);
     });
-    var response = await Dio().post(
-      '$baseUrl/updatePoints/${customer.id}',
-      data: body,
-      options: Options(
-          headers: {"Authorization": "Bearer $token"},
-          followRedirects: false,
-          validateStatus: (status) {
-            return status! < 500;
-          }),
-    );
-    print(response.statusCode);
-
-   });
-  return true;
+    return true;
   }
+
   Future<bool> setTrainingIsCompleted(
       {required String token, required int completed, required int id}) async {
     var body = FormData.fromMap({
@@ -265,6 +266,20 @@ class DataService {
     }
   }
 
+  Future<List<Prize>> getAllPrizes(String token) async {
+    try {
+      final listJson = await get("prizes", token);
+      final list = (listJson as List)
+          .map((itemJson) => Prize.fromJson(itemJson))
+          .toList();
+      return list;
+    } catch (e) {
+      print(e);
+      List<Prize> u = [];
+      return u;
+    }
+  }
+
   Future<List<TrainingCoach>> getAllCoaches({required String token}) async {
     try {
       final listJson = await get("allCoaches", token);
@@ -304,8 +319,8 @@ class DataService {
         .toList();
     return list;
   }
-  Future<List<Customer>> getAllCustomers(
-      {required String token}) async {
+
+  Future<List<Customer>> getAllCustomers({required String token}) async {
     final listJson = await get("customers", token);
     final list = (listJson as List)
         .map((itemJson) => Customer.fromJson(itemJson))
@@ -509,6 +524,7 @@ class DataService {
         "height": updatedUser.height,
         "weight": updatedUser.weight,
         "typeOfTraining": updatedUser.typeOfTraining,
+        "points": updatedUser.points,
       });
     } else {
       body = FormData.fromMap({
@@ -519,11 +535,50 @@ class DataService {
         "height": updatedUser.height,
         "weight": updatedUser.weight,
         "typeOfTraining": updatedUser.typeOfTraining,
+        "points": updatedUser.points,
       });
     }
     try {
       final response = await Dio().post(
         '$baseUrl/updateUser',
+        data: body,
+        options: Options(
+            headers: {"Authorization": "Bearer $token"},
+            followRedirects: false,
+            validateStatus: (status) {
+              return status! < 500;
+            }),
+      );
+      print(response);
+      response.data['token'] = updatedUser.token;
+      final parsed = User.fromJson(response.data);
+      print(parsed);
+      return parsed;
+    } on DioError catch (e) {
+      print(e);
+      return User(
+          image: "",
+          name: "",
+          email: "",
+          gender: "",
+          age: 0,
+          height: 0,
+          weight: 0,
+          typeOfTraining: "",
+          role: 0,
+          token: "");
+    }
+  }
+
+  Future<User> updateUserPoints(User updatedUser, String token) async {
+    var body = FormData.fromMap({
+      "id": updatedUser.id,
+      "points": updatedUser.points,
+    });
+
+    try {
+      final response = await Dio().post(
+        '$baseUrl/updateUserPoints',
         data: body,
         options: Options(
             headers: {"Authorization": "Bearer $token"},

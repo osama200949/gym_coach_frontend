@@ -185,7 +185,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
             print(_image?.path);
             User user = await service.register(
                 role: widget.role,
-                image: _image?.path,
+                image: _image?.path==null ? _defaultImage : _image?.path,
                 name: insertedName,
                 email: insertedEmail,
                 gender: gender,

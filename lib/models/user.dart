@@ -2,7 +2,7 @@ import 'dart:convert';
 
 class User {
   int id;
-  String ?image;
+  String? image;
   String name;
   String email;
   String gender;
@@ -15,9 +15,8 @@ class User {
   int points;
 
   User(
-      {
-        this.id = 0,
-        this.points = 0,
+      {this.id = 0,
+      this.points = 0,
       required this.image,
       required this.email,
       required this.name,
