@@ -29,7 +29,7 @@ class _CoachActualChatScreenState extends State<CoachActualChatScreen> {
     return Scaffold(
       appBar: AppBar(
         iconTheme: IconThemeData(color: Colors.deepOrange),
-        title: appbarLogo,
+        title: Text(customer.name, style: TextStyle(color: Colors.black),),
         backgroundColor: Colors.white,
         elevation: 0,
         actions: [

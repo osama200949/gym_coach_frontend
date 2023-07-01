@@ -30,7 +30,7 @@ class _CustomerActualChatScreenState extends State<CustomerActualChatScreen> {
     return Scaffold(
       appBar: AppBar(
         iconTheme: IconThemeData(color: Colors.deepOrange),
-        title: appbarLogo,
+        title: Text(coach.name, style: TextStyle(color: Colors.black),),
         backgroundColor: Colors.white,
         elevation: 0,
         actions: [
@@ -93,7 +93,8 @@ class _CustomerActualChatScreenState extends State<CustomerActualChatScreen> {
                                 message.receiverId == coach.id.toString() ||
                                 message.senderId == coach.id.toString()) {
                               return Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 20),
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 20),
                                 child: Row(
                                   mainAxisAlignment: isSentByCurrentUser
                                       ? MainAxisAlignment.end
@@ -108,7 +109,8 @@ class _CustomerActualChatScreenState extends State<CustomerActualChatScreen> {
                                         color: isSentByCurrentUser
                                             ? Colors.blue
                                             : Colors.grey[300],
-                                        borderRadius: BorderRadius.circular(16.0),
+                                        borderRadius:
+                                            BorderRadius.circular(16.0),
                                       ),
                                       child: Text(
                                         message.text,

@@ -201,7 +201,7 @@ class CustomerTrophyScreen extends StatelessWidget {
                       "Required points: ${prizes[index].points}",
                       style: TextStyle(fontSize: 12),
                     ),
-                    SizedBox(height: 15),
+                    // SizedBox(height: 15),
                     OutlinedButton(
                       onPressed: () {
                         // Handle claim button click
@@ -257,7 +257,7 @@ Container activePrize(BuildContext context,List<Prize> prizes, int index) {
                   "Required points: ${prizes[index].points}",
                   style: TextStyle(fontSize: 12),
                 ),
-                SizedBox(height: 15),
+                // SizedBox(height: 15),
                 OutlinedButton(
                   onPressed: () {
                     showPopup(context, prizes[index].barcode!);
