@@ -296,6 +296,9 @@ class MyComponent2 extends StatelessWidget {
                 if (snapshot.hasData) {
                   print(snapshot.data);
                   List<Training> trainings = snapshot.data as List<Training>;
+                  if(trainings.length == 0 || trainings == null){
+                    return Container();
+                  }
                   int numCompleted = 0;
                   int numUncompleted = 0;
                   for (var i = 0; i < trainings.length; i++) {
