@@ -90,7 +90,7 @@ class _CoachActivityScreenState extends State<CoachActivityScreen> {
                               Container(
                                 height: 200,
                                 child: Image.network(
-                                  "http://192.168.75.1/gym_coach/public/images/${activities[index].image}",
+                                  "https://roae-almasat.com/public/images/${activities[index].image}",
                                   fit: BoxFit.cover,
                                 ),
                               ),

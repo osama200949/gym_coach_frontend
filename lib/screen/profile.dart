@@ -79,7 +79,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         backgroundImage: _image != null
                             ? FileImage(_image!)
                             : NetworkImage(
-                                ("http://192.168.75.1/gym_coach/public/images/${user.image}"),
+                                ("https://roae-almasat.com/public/images/${user.image}"),
                               ) as ImageProvider,
                       ),
                     ),
@@ -203,7 +203,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   CircleAvatar(
                     radius: 70,
                     backgroundImage: NetworkImage(
-                        "http://192.168.75.1/gym_coach/public/images/${user.image}"),
+                        "https://roae-almasat.com/public/images/${user.image}"),
                   ),
                   SizedBox(
                     height: 5,

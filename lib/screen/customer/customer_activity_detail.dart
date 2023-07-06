@@ -64,7 +64,7 @@ class _CustomerActivityDetailScreenState
             Container(
               height: 200,
               child: Image.network(
-                "http://192.168.75.1/gym_coach/public/images/${activityProvider.image}",
+                "https://roae-almasat.com/public/images/${activityProvider.image}",
                 fit: BoxFit.cover,
               ),
             ),
@@ -126,7 +126,7 @@ class _CustomerActivityDetailScreenState
                             onTap: () {},
                             leading: CircleAvatar(
                               backgroundImage: NetworkImage(
-                                  "http://192.168.75.1/gym_coach/public/images/${customer.image}"),
+                                  "https://roae-almasat.com/public/images/${customer.image}"),
                             ),
                             title: Text(customer.name),
                             subtitle: Text(customer.email),

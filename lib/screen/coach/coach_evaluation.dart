@@ -38,7 +38,7 @@ class _EvaluationScreenState extends State<EvaluationScreen> {
         actions: [
           CircleAvatar(
             backgroundImage: NetworkImage(
-                "http://192.168.75.1/gym_coach/public/images/${user.image}"),
+                "https://roae-almasat.com/public/images/${user.image}"),
           ),
         ],
       ),
@@ -49,7 +49,7 @@ class _EvaluationScreenState extends State<EvaluationScreen> {
           return ListTile(
             leading: CircleAvatar(
               backgroundImage: NetworkImage(
-                  "http://192.168.75.1/gym_coach/public/images/${participants[index].image}"),
+                  "https://roae-almasat.com/public/images/${participants[index].image}"),
             ),
             title: Text(user.name),
             // trailing: Container(),

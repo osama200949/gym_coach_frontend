@@ -98,7 +98,7 @@ class CustomerTrophyScreen extends StatelessWidget {
                             child: ListTile(
                               leading: CircleAvatar(
                                 backgroundImage: NetworkImage(
-                                    "http://192.168.75.1/gym_coach/public/images/${customers[index].image}"),
+                                    "https://roae-almasat.com/public/images/${customers[index].image}"),
                               ),
                               title: Text(
                                 customers[index].name,
@@ -174,7 +174,7 @@ class CustomerTrophyScreen extends StatelessWidget {
             // crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               Image.network(
-                "http://192.168.75.1/gym_coach/public/images/${prizes[index].image}",
+                "https://roae-almasat.com/public/images/${prizes[index].image}",
                 fit: BoxFit.cover,
               ),
               Padding(
@@ -230,7 +230,7 @@ Container activePrize(BuildContext context,List<Prize> prizes, int index) {
         // crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Image.network(
-            "http://192.168.75.1/gym_coach/public/images/${prizes[index].image}",
+            "https://roae-almasat.com/public/images/${prizes[index].image}",
             fit: BoxFit.cover,
           ),
           Padding(
@@ -286,7 +286,7 @@ void showPopup(BuildContext context, String image) {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
                Image.network(
-                "http://192.168.75.1/gym_coach/public/images/${image}",
+                "https://roae-almasat.com/public/images/${image}",
                 fit: BoxFit.cover,
               ),
               SizedBox(height: 16.0),

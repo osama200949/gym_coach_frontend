@@ -26,7 +26,7 @@ class DashboardScreen extends StatelessWidget {
         actions: [
           CircleAvatar(
             backgroundImage: NetworkImage(
-                "http://192.168.75.1/gym_coach/public/images/${user.image}"),
+                "https://roae-almasat.com/public/images/${user.image}"),
           ),
         ],
       ),
@@ -420,7 +420,7 @@ class MyComponent3 extends StatelessWidget {
                           },
                           leading: CircleAvatar(
                             backgroundImage: NetworkImage(
-                                "http://192.168.75.1/gym_coach/public/images/${customers[index].image}"),
+                                "https://roae-almasat.com/public/images/${customers[index].image}"),
                           ),
                           title: Text(customers[index].name),
                           subtitle: Text(customers[index].email),
@@ -477,7 +477,7 @@ class MyComponent4 extends StatelessWidget {
                           },
                           leading: CircleAvatar(
                             backgroundImage: NetworkImage(
-                                "http://192.168.75.1/gym_coach/public/images/${coaches[index].image}"),
+                                "https://roae-almasat.com/public/images/${coaches[index].image}"),
                           ),
                           title: Text(coaches[index].name),
                           subtitle: Text(coaches[index].email),

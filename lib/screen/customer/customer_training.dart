@@ -39,7 +39,7 @@ class _CustomerTrainingScreenState extends State<CustomerTrainingScreen> {
         actions: [
           CircleAvatar(
             backgroundImage: NetworkImage(
-                "http://192.168.75.1/gym_coach/public/images/${user.image}"),
+                "https://roae-almasat.com/public/images/${user.image}"),
           ),
         ],
       ),
