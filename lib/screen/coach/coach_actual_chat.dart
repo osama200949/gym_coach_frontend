@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:todo_list/bin/coach_provider.dart';
 import 'package:todo_list/provider/customer_provider.dart';
@@ -29,7 +30,10 @@ class _CoachActualChatScreenState extends State<CoachActualChatScreen> {
     return Scaffold(
       appBar: AppBar(
         iconTheme: IconThemeData(color: Colors.deepOrange),
-        title: Text(customer.name, style: TextStyle(color: Colors.black),),
+        title: Text(
+          customer.name,
+          style: TextStyle(color: Colors.black),
+        ),
         backgroundColor: Colors.white,
         elevation: 0,
         actions: [
@@ -91,30 +95,46 @@ class _CoachActualChatScreenState extends State<CoachActualChatScreen> {
                           if (message.senderId == coach.id.toString() ||
                               message.receiverId == customer.id.toString() ||
                               message.senderId == customer.id.toString()) {
-                            return Row(
-                              mainAxisAlignment: isSentByCurrentUser
-                                  ? MainAxisAlignment.end
-                                  : MainAxisAlignment.start,
+                            return Column(
                               children: [
-                                Container(
-                                  margin: EdgeInsets.symmetric(
-                                      vertical: 4.0, horizontal: 8.0),
-                                  padding: EdgeInsets.symmetric(
-                                      vertical: 8.0, horizontal: 16.0),
-                                  decoration: BoxDecoration(
+                                SizedBox(height: 4.0),
+                                Text(
+                                  DateFormat('dd/MM/yyyy, EEE, hh:mm a')
+                                      .format(message.timestamp.toDate()),
+                                  style: TextStyle(
                                     color: isSentByCurrentUser
-                                        ? Colors.blue
-                                        : Colors.grey[300],
-                                    borderRadius: BorderRadius.circular(16.0),
+                                        ? Colors.white
+                                        : Colors.black,
+                                    fontSize: 12.0,
                                   ),
-                                  child: Text(
-                                    message.text,
-                                    style: TextStyle(
-                                      color: isSentByCurrentUser
-                                          ? Colors.white
-                                          : Colors.black,
+                                ),
+                                Row(
+                                  mainAxisAlignment: isSentByCurrentUser
+                                      ? MainAxisAlignment.end
+                                      : MainAxisAlignment.start,
+                                  children: [
+                                    Container(
+                                      margin: EdgeInsets.symmetric(
+                                          vertical: 4.0, horizontal: 8.0),
+                                      padding: EdgeInsets.symmetric(
+                                          vertical: 8.0, horizontal: 16.0),
+                                      decoration: BoxDecoration(
+                                        color: isSentByCurrentUser
+                                            ? Colors.blue
+                                            : Colors.grey[300],
+                                        borderRadius:
+                                            BorderRadius.circular(16.0),
+                                      ),
+                                      child: Text(
+                                        message.text,
+                                        style: TextStyle(
+                                          color: isSentByCurrentUser
+                                              ? Colors.white
+                                              : Colors.black,
+                                        ),
+                                      ),
                                     ),
-                                  ),
+                                  ],
                                 ),
                               ],
                             );
@@ -144,6 +164,9 @@ class _CoachActualChatScreenState extends State<CoachActualChatScreen> {
                             sendMessage(_textController.text,
                                 coach.id.toString(), customer.id.toString());
                             _textController.clear();
+                            setState(() {
+                              
+                            });
                           }
                         },
                       ),
