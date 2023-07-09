@@ -51,7 +51,7 @@ class _EvaluationScreenState extends State<EvaluationScreen> {
               backgroundImage: NetworkImage(
                   "https://roae-almasat.com/public/images/${participants[index].image}"),
             ),
-            title: Text(user.name),
+            title: Text(participants[index].name),
             // trailing: Container(),
             trailing: Row(
               mainAxisSize: MainAxisSize.min,
