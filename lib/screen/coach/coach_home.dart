@@ -18,14 +18,9 @@ class CoachHomeScreen extends StatefulWidget {
 class _CoachHomeScreenState extends State<CoachHomeScreen> {
   int _selectedIndex = 0;
   static List<Widget> _widgetOptions = <Widget>[
-    // Text('Coach home screen'),
     DashboardScreen(),
-    // MyHomePage(title: "title"),
-    // Text('Search'),
     CoachChatScreen(),
-    // CoachCustomerScreen(),
     CoachCustomersScreen(),
-    // Text('Profile'),
     ProfileScreen(),
   ];
 

@@ -188,18 +188,6 @@ class _CustomerActivityDetailScreenState
                 Icons.cancel_outlined,
                 color: Colors.white,
               ),
-        // child: isRegistered
-        //     ? Icon(
-        //         Icons.check_outlined,
-        //         color: Colors.deepOrange,
-        //       )
-        //     : Container(
-        //         width: 300,
-        //         // height: 150,
-        //         child: Text(
-        //           "Register",
-        //           style: TextStyle(color: Colors.deepOrange),
-        //         )),
       ),
     );
   }

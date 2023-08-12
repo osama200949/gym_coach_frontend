@@ -407,63 +407,6 @@ class MyComponent2 extends StatelessWidget {
   }
 }
 
-// class MyComponent3 extends StatelessWidget {
-//   @override
-//   Widget build(BuildContext context) {
-//     final user = Provider.of<UserProvider>(context, listen: true).get();
-//     DataService service = DataService();
-//     return Container(
-//       color: Color.fromARGB(255, 255, 242, 238),
-//       padding: EdgeInsets.all(16),
-//       child: Column(
-//         crossAxisAlignment: CrossAxisAlignment.start,
-//         children: [
-//           Text(
-//             'Customers',
-//             style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-//           ),
-//           SizedBox(height: 16),
-//           Text(
-//             'List of ${user.typeOfTraining}',
-//             style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-//           ),
-//           SizedBox(height: 16),
-//           FutureBuilder(
-//               future: service.getCustomers(
-//                   token: user.token, typeOfTraining: user.typeOfTraining),
-//               builder: (context, snapshot) {
-//                 if (snapshot.hasData) {
-//                   List<Customer> customers = snapshot.data as List<Customer>;
-//                   return Container(
-//                     height: 200,
-//                     child: ListView.builder(
-//                       itemCount: customers.length,
-//                       itemBuilder: (context, index) {
-//                         return ListTile(
-//                           onTap: () {
-//                             // customer2.set(data[index]);
-//                             // Navigator.pushNamed(context, '/coachCustomerPage');
-//                           },
-//                           leading: CircleAvatar(
-//                             backgroundImage: NetworkImage(
-//                                 "https://roae-almasat.com/public/images/${customers[index].image}"),
-//                           ),
-//                           title: Text(customers[index].name),
-//                           subtitle: Text(customers[index].email),
-//                         );
-//                       },
-//                     ),
-//                   );
-//                 } else {
-//                   return Center(child: CircularProgressIndicator());
-//                 }
-//               }),
-//         ],
-//       ),
-//     );
-//   }
-// }
-
 class MyComponent4 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {

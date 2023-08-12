@@ -18,14 +18,9 @@ class CustomerHomeScreen extends StatefulWidget {
 class _CustomerHomeScreenState extends State<CustomerHomeScreen> {
   int _selectedIndex = 0;
   static List<Widget> _widgetOptions = <Widget>[
-    // Text('Home2'),
     CustomerLandingScreen(),
-    // MyHomePage(title: "title"),
-    // Text('Search'),
     CustomerChatScreen(),
     CustomerTrainingScreen(),
-    // Text('Profile'),
-    // CustomerProfileScreen(),
     ProfileScreen(),
   ];
 

@@ -345,36 +345,6 @@ class MyComponent2 extends StatelessWidget {
                   return Center(child: CircularProgressIndicator());
                 }
               }),
-          // SizedBox(height: 16),
-          // Row(
-          //   children: [
-          //     Expanded(
-          //       child: Column(
-          //         children: [
-          //           Text('Done'),
-          //           SizedBox(height: 8),
-          //           CircularProgressIndicator(
-          //             value: 0.9,
-          //             backgroundColor: Colors.grey[300],
-          //           ),
-          //         ],
-          //       ),
-          //     ),
-          //     SizedBox(width: 16),
-          //     Expanded(
-          //       child: Column(
-          //         children: [
-          //           Text('Cancelled'),
-          //           SizedBox(height: 8),
-          //           CircularProgressIndicator(
-          //             value: 0.2,
-          //             backgroundColor: Colors.grey[300],
-          //           ),
-          //         ],
-          //       ),
-          //     ),
-          // ],
-          // ),
         ],
       ),
     );
