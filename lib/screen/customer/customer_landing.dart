@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:todo_list/models/bmi_calculator.dart';
@@ -127,6 +128,7 @@ class CustomerLandingScreen extends StatelessWidget {
                 ),
                 onPressed: () {
                   service.logout(user.token);
+                  clearUserToken();
                   Navigator.pushReplacementNamed(context, '/login');
                 },
               ),
@@ -159,6 +161,11 @@ class CustomerLandingScreen extends StatelessWidget {
       ),
     );
   }
+}
+
+Future<void> clearUserToken() async {
+  final storage = FlutterSecureStorage();
+  await storage.deleteAll();
 }
 
 class MyComponent1 extends StatelessWidget {
@@ -319,7 +326,7 @@ class MyComponent2 extends StatelessWidget {
                 if (snapshot.hasData) {
                   print(snapshot.data);
                   List<Training> trainings = snapshot.data as List<Training>;
-                  if(trainings.length == 0 || trainings == null){
+                  if (trainings.length == 0 || trainings == null) {
                     return Container();
                   }
                   int numCompleted = 0;

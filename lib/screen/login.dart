@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:provider/provider.dart';
 import 'package:todo_list/models/user.dart';
 import 'package:todo_list/provider/user_provider.dart';
@@ -96,6 +97,9 @@ class _LoginScreenState extends State<LoginScreen> {
           if (user.email != "") {
             print("The id is: " + user.id.toString());
             userProvider2.set(user);
+            await storeUserToken(user.email,
+                insertedPassword); //! Stor user token in the local storage
+
             print(userProvider2.get().name);
             if (userProvider2.get().role == 1) {
               Navigator.pushReplacementNamed(context, '/coachHomePage');
@@ -155,4 +159,10 @@ class _LoginScreenState extends State<LoginScreen> {
       ),
     );
   }
+}
+
+Future<void> storeUserToken(String email, String password) async {
+  final storage = FlutterSecureStorage();
+  await storage.write(key: 'user_email', value: email);
+  await storage.write(key: 'user_password', value: password);
 }

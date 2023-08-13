@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:provider/provider.dart';
 import 'package:todo_list/provider/user_provider.dart';
 import 'package:todo_list/services/rest.dart';
@@ -52,6 +53,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           IconButton(
             onPressed: () {
               service.logout(user.token);
+              clearUserToken();
               Navigator.pushReplacementNamed(context, '/login');
             },
             icon: Icon(
@@ -299,4 +301,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
       ),
     );
   }
+}
+
+Future<void> clearUserToken() async {
+  final storage = FlutterSecureStorage();
+  await storage.deleteAll();
 }

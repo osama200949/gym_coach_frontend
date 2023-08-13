@@ -1,11 +1,11 @@
+import 'dart:developer';
+
 import 'package:firebase_core/firebase_core.dart';
 
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:provider/provider.dart';
-import 'package:todo_list/models/carousel.dart';
-import 'package:todo_list/models/product.dart';
-import 'package:todo_list/models/user.dart';
 import 'package:todo_list/provider/activity_provider.dart';
 import 'package:todo_list/provider/customer_provider.dart';
 import 'package:todo_list/provider/training_coach_provider.dart';
@@ -28,23 +28,22 @@ import 'package:todo_list/screen/customer/customer_home.dart';
 import 'package:todo_list/screen/customer/customer_prize.dart';
 import 'package:todo_list/screen/register.dart';
 import 'package:todo_list/screen/login.dart';
-import 'package:todo_list/bin/customer_register.dart';
-import 'package:todo_list/screen/test.dart';
 import 'package:todo_list/screen/customer/customer_training_detail.dart';
-import 'package:todo_list/widgets/create_bottom_sheet.dart';
-import 'package:todo_list/widgets/edit_bottom_sheet.dart';
-import 'package:todo_list/widgets/snackbar.dart';
-import './services/rest.dart';
-import 'package:image/image.dart' as image;
- import 'dart:io';
+import 'dart:io';
 
- class MyHttpOverrides extends HttpOverrides{
+import 'package:todo_list/services/rest.dart';
+
+import 'models/user.dart';
+
+class MyHttpOverrides extends HttpOverrides {
   @override
-  HttpClient createHttpClient(SecurityContext? context){
+  HttpClient createHttpClient(SecurityContext? context) {
     return super.createHttpClient(context)
-      ..badCertificateCallback = (X509Certificate cert, String host, int port)=> true;
+      ..badCertificateCallback =
+          (X509Certificate cert, String host, int port) => true;
   }
 }
+
 void main() async {
   HttpOverrides.global = MyHttpOverrides();
   WidgetsFlutterBinding.ensureInitialized();
@@ -58,279 +57,160 @@ void main() async {
       ChangeNotifierProvider(create: (context) => WeekdayProvider()),
       ChangeNotifierProvider(create: (context) => TrainingCoachProvider()),
     ],
-    child: const MyApp(),
+    child: MaterialApp(home: const MyApp()),
   ));
 }
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
-  // This widget is the root of your application.
+
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Gym coach',
-      theme: ThemeData(
-        primarySwatch: Colors.deepOrange,
-      ),
-      initialRoute: '/login',
-      routes: {
-        // When navigating to the "/" route, build the FirstScreen widget.
-        '/evaluationPage': (context) => EvaluationScreen(),
-        '/activityDetailPage': (context) => CustomerActivityDetailScreen(),
-        '/customerActivityPage': (context) => CustomerActivityScreen(),
-        '/customerTrophyPage': (context) => CustomerTrophyScreen(),
-        '/customerChatPage': (context) => CustomerActualChatScreen(),
-        '/coachChatPage': (context) => CoachActualChatScreen(),
-        '/login': (context) => LoginScreen(),
-        '/addNewActivity': (context) => AddNewActivityScreen(),
-        '/coachActivityPage': (context) => CoachActivityScreen(),
-        '/coachActivityDetailPage': (context) => CoachActivityDetailScreen(),
+    return FutureBuilder<UserEmailAndPassword>(
+      future: getUserEmailAmdPassword(),
+      builder: (context, snapshot) {
+        final userProvider = Provider.of<UserProvider>(context, listen: false);
+        final service = DataService();
 
-        '/coachTrainingDetailPage': (context) => CoachTrainingDetailScreen(),
-        '/trainingDetailPage': (context) => CustomerTrainingDetailsScreen(),
-        '/addNewTraining': (context) => AddNewTrainingScreen(),
-        '/coachCustomerPage': (context) => CoachCustomerScreen(),
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return CircularProgressIndicator(); // Show loading anmiation
+        } else {
+          final emailAndPassword = snapshot.data;
+          final isLoggedIn = emailAndPassword?.email != null;
 
-        '/customerHomePage': (context) => const CustomerHomeScreen(),
-        '/coachHomePage': (context) => const CoachHomeScreen(),
-        '/customerRegister': (context) => RegisterScreen(
-              role: 0,
-            ),
-        '/coachRegister': (context) => RegisterScreen(
-              role: 1,
-            ),
+          // Determine the initial route based on the token and role
+          String initialRoute = isLoggedIn ? '/customerHomePage' : '/login';
+
+          if (isLoggedIn) {
+            return FutureBuilder<User>(
+              future: service.authenticate(
+                emailAndPassword?.email as String,
+                emailAndPassword?.password as String,
+              ),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Container(
+                    color: Colors.white,
+                    child: Hero(
+                      tag: 'hero',
+                      child: CircleAvatar(
+                        backgroundColor: Colors.transparent,
+                        radius: 48.0,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              "Gym",
+                              style: TextStyle(
+                                  color: Colors.deepOrange, fontSize: 60),
+                            ),
+                            Text(
+                              "Coach",
+                              style:
+                                  TextStyle(color: Colors.black, fontSize: 60),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  );
+                } else {
+                  final User user = snapshot.data as User;
+                  userProvider.setInitialUser(user);
+                  if (user.role == 1) {
+                    initialRoute = '/coachHomePage';
+                  }
+
+                  // Return MaterialApp with the initialRoute
+                  return MaterialApp(
+                    title: 'Gym coach',
+                    theme: ThemeData(
+                      primarySwatch: Colors.deepOrange,
+                    ),
+                    initialRoute: initialRoute,
+                    routes: buildRoutes(),
+                  );
+                }
+              },
+            );
+          } else {
+            // Return MaterialApp with the initialRoute
+            return MaterialApp(
+              title: 'Gym coach',
+              theme: ThemeData(
+                primarySwatch: Colors.deepOrange,
+              ),
+              initialRoute: initialRoute,
+              routes: buildRoutes(),
+            );
+          }
+        }
       },
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({Key? key, required this.title}) : super(key: key);
-
-  final String title;
-
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
+Map<String, Widget Function(BuildContext)> buildRoutes() {
+  return {
+    '/evaluationPage': (context) => EvaluationScreen(),
+    '/activityDetailPage': (context) => CustomerActivityDetailScreen(),
+    '/customerActivityPage': (context) => CustomerActivityScreen(),
+    '/customerTrophyPage': (context) => CustomerTrophyScreen(),
+    '/customerChatPage': (context) => CustomerActualChatScreen(),
+    '/coachChatPage': (context) => CoachActualChatScreen(),
+    '/login': (context) => LoginScreen(),
+    '/addNewActivity': (context) => AddNewActivityScreen(),
+    '/coachActivityPage': (context) => CoachActivityScreen(),
+    '/coachActivityDetailPage': (context) => CoachActivityDetailScreen(),
+    '/coachTrainingDetailPage': (context) => CoachTrainingDetailScreen(),
+    '/trainingDetailPage': (context) => CustomerTrainingDetailsScreen(),
+    '/addNewTraining': (context) => AddNewTrainingScreen(),
+    '/coachCustomerPage': (context) => CoachCustomerScreen(),
+    '/customerHomePage': (context) => const CustomerHomeScreen(),
+    '/coachHomePage': (context) => const CoachHomeScreen(),
+    '/customerRegister': (context) => RegisterScreen(role: 0),
+    '/coachRegister': (context) => RegisterScreen(role: 1),
+  };
 }
 
-class _MyHomePageState extends State<MyHomePage> {
-  DataService service = DataService();
-  List<Carousel> _carousels = [];
-  List<Product> _products = [];
-  @override
-  Widget build(BuildContext context) {
-    final user = Provider.of<UserProvider>(context, listen: true);
-    return DefaultTabController(
-        length: 2,
-        child: Scaffold(
-          // appBar: AppBar(title: Text("Welcome: " + user.get().name)),
-          body: Column(
-            children: [
-              SafeArea(
-                child: Container(
-                  color: Colors.pink,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      Text(
-                        "Welcome ${user.get().name}",
-                        style: TextStyle(color: Colors.white),
-                      ),
-                      TextButton(
-                          onPressed: () async {
-                            //! Logout
-                            bool response =
-                                await service.logout(user.get().token);
-                            if (response == true) {
-                              Navigator.pushReplacementNamed(context, '/login');
-                            } else {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                  displaySnackBar(text: "Failed to logout"));
-                            }
-                          },
-                          child: Row(
-                            children: [
-                              Text(
-                                "Logout",
-                                style: TextStyle(color: Colors.white),
-                              ),
-                              Icon(
-                                Icons.logout,
-                                color: Colors.white,
-                              )
-                            ],
-                          ))
-                    ],
-                  ),
-                ),
-              ),
-              TabBar(tabs: [
-                Tab(
-                  icon: Icon(
-                    Icons.add_shopping_cart_rounded,
-                    color: Colors.pink,
-                  ),
-                ),
-                Tab(
-                  icon: Icon(Icons.view_carousel, color: Colors.pink),
-                )
-              ]),
-              Expanded(
-                child: TabBarView(children: [
-                  _productTab(user.get()),
-                  _carouselTab(user.get()),
-                ]),
-              )
-            ],
-          ),
-        ));
+// Rest of your code remains unchanged
+Future<UserEmailAndPassword> getUserEmailAmdPassword() async {
+  final storage = FlutterSecureStorage();
+  final email = await storage.read(key: 'user_email');
+  final String password = await storage.read(key: 'user_password') ?? "";
+
+  if (email == null) {
+    return UserEmailAndPassword(null, null);
   }
+  return UserEmailAndPassword(email, password);
+}
 
-  FutureBuilder<List<Product>> _productTab(User user) {
-    return FutureBuilder<List<Product>>(
-      future: service.getProducts(user.token),
-      builder: ((context, snapshot) {
-        if (snapshot.hasData) {
-          _products = snapshot.data as List<Product>;
-          final user = Provider.of<UserProvider>(context, listen: true);
-          return _buildProductScreen(user.get());
-        }
-        return _buildFetchingDataScreen();
-      }),
-    );
-  }
+class UserEmailAndPassword {
+  final String? email;
+  final String? password;
 
-  Scaffold _buildProductScreen(User user) {
-    return Scaffold(
-      body: RefreshIndicator(
-        onRefresh: () async {
-          await service.getCarousels(user.token);
-          await service.getProducts(user.token);
-          setState(() {});
-        },
-        child: ListView.builder(
-            itemCount: _products.length,
-            itemBuilder: (BuildContext context, int index) {
-              return Column(
-                children: [
-                  ListTile(
-                    title: Text(
-                      _products[index].name,
-                      style: TextStyle(fontSize: 20),
-                    ),
-                    subtitle: Text(_products[index].description),
-                    trailing: Text("\$${_products[index].price}"),
-                  ),
-                  Divider(
-                    thickness: 3,
-                  )
-                ],
-              );
-            }),
-      ),
-    );
-  }
+  UserEmailAndPassword(this.email, this.password);
+}
 
-  FutureBuilder<List<Carousel>> _carouselTab(User user) {
-    return FutureBuilder<List<Carousel>>(
-      future: service.getCarousels(user.token),
-      builder: ((context, snapshot) {
-        if (snapshot.hasData) {
-          _carousels = snapshot.data as List<Carousel>;
-          return _buildCarouselScreen(user);
-        }
-        return _buildFetchingDataScreen();
-      }),
-    );
-  }
-
-  Scaffold _buildCarouselScreen(User user) {
-    return Scaffold(
-      body: RefreshIndicator(
-        onRefresh: () async {
-          await service.getCarousels(user.token);
-          await service.getProducts(user.token);
-          setState(() {});
-        },
-        child: ListView.builder(
-            itemCount: _carousels.length,
-            itemBuilder: (BuildContext context, int index) {
-              return Column(
-                children: [
-                  _carousels[index].image != null
-                      ? ListTile(
-                          title: Text(
-                            _carousels[index].title,
-                            style: TextStyle(fontSize: 20),
-                          ),
-                          subtitle: Text(_carousels[index].description),
-                          leading: Container(
-                            width: 65,
-                            height: 65,
-                            child: Image.network(
-                              "http://192.168.75.1/example-app/public/images/${_carousels[index].image}",
-                            ),
-                          ),
-                          //! Delete
-                          onLongPress: () {
-                            service.deleteCarousel(
-                                _carousels[index].id, user.token);
-                          },
-
-                          //! Edit
-                          onTap: () {
-                            editBottomSheet(
-                                sheetContext: context,
-                                carousel: _carousels[index]);
-                          },
-                        )
-                      : ListTile(
-                          title: Text(
-                            _carousels[index].title,
-                            style: TextStyle(fontSize: 20),
-                          ),
-                          subtitle: Text(_carousels[index].description),
-                          //! Delete
-                          onLongPress: () {
-                            service.deleteCarousel(
-                                _carousels[index].id, user.token);
-                          },
-                          //! Edit
-                          onTap: () {
-                            editBottomSheet(
-                                sheetContext: context,
-                                carousel: _carousels[index]);
-                          },
-                        ),
-                  Divider(
-                    thickness: 3,
-                  )
-                ],
-              );
-            }),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          carouselBottomSheet(context);
-        },
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
-    );
-  }
-
-  Scaffold _buildFetchingDataScreen() {
-    return Scaffold(
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            CircularProgressIndicator(),
-            SizedBox(height: 50),
-            Text('Fetching data... Please wait'),
-          ],
+final logo = Hero(
+  tag: 'hero',
+  child: CircleAvatar(
+    backgroundColor: Colors.transparent,
+    radius: 48.0,
+    // child: Image.asset('assets/logo.png'),
+    // child: FlutterLogo(size: 200),
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Text(
+          "Gym",
+          style: TextStyle(color: Colors.deepOrange, fontSize: 60),
         ),
-      ),
-    );
-  }
-}
+        Text(
+          "Coach",
+          style: TextStyle(color: Colors.black, fontSize: 60),
+        ),
+      ],
+    ),
+  ),
+);

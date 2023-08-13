@@ -8,6 +8,9 @@ class UserProvider extends ChangeNotifier{
     _user = user2;
     notifyListeners();
   }
+  void setInitialUser(User user2){
+    _user = user2;
+  }
 
   User get() => _user;
 }
