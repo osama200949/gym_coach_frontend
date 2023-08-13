@@ -71,6 +71,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
       super.dispose();
     }
 
+    @override
+    void initState() {
+      super.initState();
+      ageController.text = age.toString();
+      heightController.text = height.toString();
+      weightController.text = weight.toString();
+    }
+
     final name = TextFormField(
       validator: (value) {
         if (value == null || value.isEmpty) {
@@ -93,7 +101,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
       validator: (value) {
         if (value == null || value.isEmpty) {
           return 'Enter your email';
+        } else if (!RegExp(r'^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$')
+            .hasMatch(value)) {
+          return 'Enter a valid email address';
         }
+
         return null;
       },
       keyboardType: TextInputType.emailAddress,
@@ -111,6 +123,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
       validator: (value) {
         if (value == null || value.isEmpty) {
           return 'Enter your password';
+        } else if (value.length < 6) {
+          return 'Password must be at least 6 characters long';
         }
         return null;
       },
@@ -132,6 +146,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
       validator: (value) {
         if (value == null || value.isEmpty) {
           return 'Confirm your password';
+        } else if (insertedPassword != value) {
+          return "Password doesn't match";
         }
         return null;
       },
@@ -185,7 +201,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
             print(_image?.path);
             User user = await service.register(
                 role: widget.role,
-                image: _image?.path==null ? _defaultImage : _image?.path,
+                image: _image?.path == null ? _defaultImage : _image?.path,
                 name: insertedName,
                 email: insertedEmail,
                 gender: gender,
@@ -208,7 +224,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     );
 
     return Scaffold(
-      appBar: CustomAppBar( context),
+      appBar: CustomAppBar(context),
       backgroundColor: Colors.white,
       body: Center(
         child: Form(

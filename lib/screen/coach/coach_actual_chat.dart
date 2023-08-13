@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import 'package:todo_list/bin/coach_provider.dart';
 import 'package:todo_list/provider/customer_provider.dart';
 import 'package:todo_list/provider/training_coach_provider.dart';
 import 'dart:async';
