@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -60,12 +61,23 @@ class _CoachActivityDetailScreenState extends State<CoachActivityDetailScreen>
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Container(
-              height: 200,
-              child: Image.network(
-                "https://roae-almasat.com/public/images/${activityProvider.image}",
-                fit: BoxFit.cover,
+            CachedNetworkImage(
+              imageUrl:
+                  "https://roae-almasat.com/public/images/${activityProvider.image}",
+              imageBuilder: (context, imageProvider) => Container(
+                height: 200,
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    image: imageProvider,
+                    fit: BoxFit.cover,
+                  ),
+                ),
               ),
+              placeholder: (context, url) => Container(
+                height: 200,
+                child: Center(child: CircularProgressIndicator()),
+              ),
+              errorWidget: (context, url, error) => Icon(Icons.error),
             ),
             Padding(
               padding: const EdgeInsets.all(16.0),

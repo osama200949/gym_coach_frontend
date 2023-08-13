@@ -101,13 +101,8 @@ class _CustomerActivityScreenState extends State<CustomerActivityScreen> {
                                 ),
                                 placeholder: (context, url) => Container(
                                   height: 200,
-                                  decoration: BoxDecoration(
-                                    image: DecorationImage(
-                                      image: AssetImage(
-                                          "./../../../assets/images/personal_img.png"),
-                                      fit: BoxFit.cover,
-                                    ),
-                                  ),
+                                  child: Center(
+                                      child: CircularProgressIndicator()),
                                 ),
                                 errorWidget: (context, url, error) =>
                                     Icon(Icons.error),

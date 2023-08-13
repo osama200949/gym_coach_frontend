@@ -87,12 +87,26 @@ class _CoachActivityScreenState extends State<CoachActivityScreen> {
                             crossAxisAlignment: CrossAxisAlignment.stretch,
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
-                              Container(
-                                height: 200,
-                                child: Image.network(
-                                  "https://roae-almasat.com/public/images/${activities[index].image}",
-                                  fit: BoxFit.cover,
+                              CachedNetworkImage(
+                                imageUrl:
+                                    "https://roae-almasat.com/public/images/${activities[index].image}",
+                                imageBuilder: (context, imageProvider) =>
+                                    Container(
+                                  height: 200,
+                                  decoration: BoxDecoration(
+                                    image: DecorationImage(
+                                      image: imageProvider,
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
                                 ),
+                                placeholder: (context, url) => Container(
+                                  height: 200,
+                                  child: Center(
+                                      child: CircularProgressIndicator()),
+                                ),
+                                errorWidget: (context, url, error) =>
+                                    Icon(Icons.error),
                               ),
                               Padding(
                                 padding: const EdgeInsets.fromLTRB(5, 5, 0, 0),

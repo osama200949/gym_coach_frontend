@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:todo_list/models/prize.dart';
@@ -171,11 +172,24 @@ class CustomerTrophyScreen extends StatelessWidget {
         child: Card(
           elevation: 1.0,
           child: Column(
-            // crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Image.network(
-                "https://roae-almasat.com/public/images/${prizes[index].image}",
-                fit: BoxFit.cover,
+              CachedNetworkImage(
+                imageUrl:
+                    "https://roae-almasat.com/public/images/${prizes[index].image}",
+                imageBuilder: (context, imageProvider) => Container(
+                  height: 120,
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      image: imageProvider,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                ),
+                placeholder: (context, url) => Container(
+                  height: 120,
+                  child: Center(child: CircularProgressIndicator()),
+                ),
+                errorWidget: (context, url, error) => Icon(Icons.error),
               ),
               Padding(
                 padding: EdgeInsets.all(8.0),
@@ -220,18 +234,31 @@ class CustomerTrophyScreen extends StatelessWidget {
   }
 }
 
-Container activePrize(BuildContext context,List<Prize> prizes, int index) {
+Container activePrize(BuildContext context, List<Prize> prizes, int index) {
   return Container(
     // height: 100,
     width: 250,
     child: Card(
       elevation: 1.0,
       child: Column(
-        // crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Image.network(
-            "https://roae-almasat.com/public/images/${prizes[index].image}",
-            fit: BoxFit.cover,
+          CachedNetworkImage(
+            imageUrl:
+                "https://roae-almasat.com/public/images/${prizes[index].image}",
+            imageBuilder: (context, imageProvider) => Container(
+              height: 200,
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: imageProvider,
+                  fit: BoxFit.cover,
+                ),
+              ),
+            ),
+            placeholder: (context, url) => Container(
+              height: 200,
+              child: Center(child: CircularProgressIndicator()),
+            ),
+            errorWidget: (context, url, error) => Icon(Icons.error),
           ),
           Padding(
             padding: EdgeInsets.all(8.0),
@@ -285,7 +312,7 @@ void showPopup(BuildContext context, String image) {
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-               Image.network(
+              Image.network(
                 "https://roae-almasat.com/public/images/${image}",
                 fit: BoxFit.cover,
               ),

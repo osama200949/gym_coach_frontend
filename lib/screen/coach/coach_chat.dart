@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:todo_list/models/customer.dart';
@@ -50,9 +51,12 @@ class _CoachChatScreenState extends State<CoachChatScreen> {
                       customerProvider.set(customer);
                       Navigator.pushNamed(context, '/coachChatPage');
                     },
+
                     leading: CircleAvatar(
-                      backgroundImage: NetworkImage(
-                          "https://roae-almasat.com/public/images/${customer.image}"),
+                      backgroundImage: CachedNetworkImageProvider(
+                          "https://roae-almasat.com/public/images/${customer.image}"
+                          
+                          ),
                     ),
                     title: Text(customer.name),
                     subtitle: Text(customer.email),
