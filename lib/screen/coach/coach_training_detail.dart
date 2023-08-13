@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:todo_list/models/training.dart';
@@ -5,6 +6,7 @@ import 'package:todo_list/services/rest.dart';
 import 'package:todo_list/widgets/appbar.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:video_player/video_player.dart';
+import 'package:youtube/youtube_thumbnail.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 import '../../provider/training_provider.dart';
@@ -39,22 +41,21 @@ class _CoachTrainingDetailScreenState extends State<CoachTrainingDetailScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              YoutubePlayerBuilder(
-                player: YoutubePlayer(
-                  controller: YoutubePlayerController(
-                    initialVideoId: videoId as String,
-                    flags: YoutubePlayerFlags(
-                      mute: true,
-                      autoPlay: false,
-                      hideControls: true,
-                      disableDragSeek: true,
-                      loop: false,
+              CachedNetworkImage(
+                imageUrl: YoutubeThumbnail(youtubeId: videoId).hd(),
+                imageBuilder: (context, imageProvider) => Container(
+                  height: 220,
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      image: imageProvider,
+                      fit: BoxFit.cover,
                     ),
                   ),
                 ),
-                builder: (context, player) {
-                  return player;
-                },
+                placeholder: (context, url) => Container(
+                    height: 150,
+                    child: Center(child: CircularProgressIndicator())),
+                errorWidget: (context, url, error) => Icon(Icons.error),
               ),
               if (!_isEditing)
                 Padding(
@@ -127,22 +128,24 @@ class _CoachTrainingDetailScreenState extends State<CoachTrainingDetailScreen> {
                                 onPressed: () async {
                                   // TODO: update the training data
                                   Training newTraining =
-                                      await service.updateTraining(Training(
-                                          id: training.id,
-                                          title: title != ""
-                                              ? title
-                                              : training.title,
-                                          description: description != ""
-                                              ? description
-                                              : training.description,
-                                          day: training.day,
-                                          video: videoUrl != ""
-                                              ? videoUrl
-                                              : training.video,
-                                          isCompleted: training.isCompleted,
-                                          coachId: training.coachId,
-                                          customerId: training.customerId,
-                                          coachName: training.coachName), user.token);
+                                      await service.updateTraining(
+                                          Training(
+                                              id: training.id,
+                                              title: title != ""
+                                                  ? title
+                                                  : training.title,
+                                              description: description != ""
+                                                  ? description
+                                                  : training.description,
+                                              day: training.day,
+                                              video: videoUrl != ""
+                                                  ? videoUrl
+                                                  : training.video,
+                                              isCompleted: training.isCompleted,
+                                              coachId: training.coachId,
+                                              customerId: training.customerId,
+                                              coachName: training.coachName),
+                                          user.token);
                                   Provider.of<TrainingProvider>(context,
                                           listen: false)
                                       .set(newTraining);

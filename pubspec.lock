@@ -805,6 +805,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.1.2"
+  youtube:
+    dependency: "direct main"
+    description:
+      name: youtube
+      sha256: "3d82e77fe8918a891c3aaba68adc14d5f4bbc6c2e368cfa100a9d620f238f9b0"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.1"
   youtube_player_flutter:
     dependency: "direct main"
     description:

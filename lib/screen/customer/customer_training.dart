@@ -8,6 +8,7 @@ import 'package:todo_list/provider/user_provider.dart';
 import 'package:todo_list/provider/weekday_provider.dart';
 import 'package:todo_list/services/rest.dart';
 import 'package:todo_list/widgets/appbar_with_no_back_btn.dart';
+import 'package:youtube/youtube_thumbnail.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 import '../../provider/customer_provider.dart';
@@ -29,7 +30,6 @@ class _CustomerTrainingScreenState extends State<CustomerTrainingScreen> {
     final user = Provider.of<UserProvider>(context, listen: true).get();
     final weekday = Provider.of<WeekdayProvider>(context, listen: false);
     DataService service = DataService();
-
     return Scaffold(
       appBar: AppBar(
         iconTheme: IconThemeData(color: Colors.deepOrange),
@@ -51,13 +51,11 @@ class _CustomerTrainingScreenState extends State<CustomerTrainingScreen> {
               print(snapshot.data);
               List<Training> trainings = snapshot.data as List<Training>;
               return RefreshIndicator(
-                onRefresh: () async{
-                await service.getCustomerTraining(
-                    customerId: user.id, token: user.token);
-                  setState(() {
-                    
-                  });
-                } ,
+                onRefresh: () async {
+                  await service.getCustomerTraining(
+                      customerId: user.id, token: user.token);
+                  setState(() {});
+                },
                 child: SingleChildScrollView(
                   child: Column(
                     children: [
@@ -79,6 +77,8 @@ class _CustomerTrainingScreenState extends State<CustomerTrainingScreen> {
                                 scrollDirection: Axis.horizontal,
                                 itemCount: trainings.length,
                                 itemBuilder: (context, index) {
+                                  String url = trainings[index].video ?? "";
+                                  String id = url.substring(url.length - 11);
                                   String videoId = YoutubePlayer.convertUrlToId(
                                           trainings[index].video as String)
                                       as String;
@@ -105,24 +105,26 @@ class _CustomerTrainingScreenState extends State<CustomerTrainingScreen> {
                                           crossAxisAlignment:
                                               CrossAxisAlignment.start,
                                           children: [
-                                            YoutubePlayerBuilder(
-                                              player: YoutubePlayer(
-                                                controller:
-                                                    YoutubePlayerController(
-                                                  initialVideoId:
-                                                      videoId as String,
-                                                  flags: YoutubePlayerFlags(
-                                                    mute: true,
-                                                    autoPlay: false,
-                                                    hideControls: true,
-                                                    disableDragSeek: true,
-                                                    loop: false,
+                                            CachedNetworkImage(
+                                              imageUrl: YoutubeThumbnail(
+                                                      youtubeId: videoId)
+                                                  .hd(),
+                                              imageBuilder:
+                                                  (context, imageProvider) =>
+                                                      Container(
+                                                height: 150,
+                                                decoration: BoxDecoration(
+                                                  image: DecorationImage(
+                                                    image: imageProvider,
+                                                    fit: BoxFit.cover,
                                                   ),
                                                 ),
                                               ),
-                                              builder: (context, player) {
-                                                return player;
-                                              },
+                                              placeholder: (context, url) =>
+                                                  Container(height: 150, child: Center(child: CircularProgressIndicator())),
+                                              errorWidget:
+                                                  (context, url, error) =>
+                                                      Icon(Icons.error),
                                             ),
                                             Padding(
                                               padding:

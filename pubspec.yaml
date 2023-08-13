@@ -48,6 +48,7 @@ dependencies:
   syncfusion_flutter_gauges: ^21.1.41
   url_launcher: ^6.1.10
   video_player: ^2.6.1
+  youtube: ^1.0.1
   youtube_player_flutter: ^8.1.2
 
 dev_dependencies:
