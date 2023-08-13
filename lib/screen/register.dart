@@ -57,28 +57,20 @@ class _RegisterScreenState extends State<RegisterScreen> {
     }
   }
 
+  final ageController = TextEditingController();
+  final heightController = TextEditingController();
+  final weightController = TextEditingController();
+
+  @override
+  void dispose() {
+    ageController.dispose();
+    heightController.dispose();
+    weightController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-    final ageController = TextEditingController();
-    final heightController = TextEditingController();
-    final weightController = TextEditingController();
-
-    @override
-    void dispose() {
-      ageController.dispose();
-      heightController.dispose();
-      weightController.dispose();
-      super.dispose();
-    }
-
-    @override
-    void initState() {
-      super.initState();
-      ageController.text = age.toString();
-      heightController.text = height.toString();
-      weightController.text = weight.toString();
-    }
-
     final name = TextFormField(
       validator: (value) {
         if (value == null || value.isEmpty) {
@@ -183,6 +175,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     borderRadius: BorderRadius.circular(24.0),
                     side: BorderSide(color: Colors.red)))),
         onPressed: () async {
+          if (_image?.path == null) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text('Please select an image')),
+            );
+            return; // Don't proceed with registration
+          }
           // Validate returns true if the form is valid, or false otherwise.
           if (_formKey.currentState!.validate()) {
             // If the form is valid, display a snackbar. In the real world,
