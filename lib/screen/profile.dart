@@ -51,9 +51,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
       appBar: AppBar(
         actions: [
           IconButton(
-            onPressed: () {
+            onPressed: () async{
               service.logout(user.token);
-              clearUserToken();
+             await clearUserToken();
               Navigator.pushReplacementNamed(context, '/login');
             },
             icon: Icon(

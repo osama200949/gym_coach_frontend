@@ -126,15 +126,16 @@ class CustomerLandingScreen extends StatelessWidget {
                   Icons.logout,
                   color: Colors.red,
                 ),
-                onPressed: () {
+                onPressed: () async{
                   service.logout(user.token);
-                  clearUserToken();
+                  await clearUserToken();
                   Navigator.pushReplacementNamed(context, '/login');
                 },
               ),
               title: Text('Logout'),
-              onTap: () {
+              onTap: () async{
                 service.logout(user.token);
+                await clearUserToken();
                 Navigator.pushReplacementNamed(context, '/login');
               },
             ),

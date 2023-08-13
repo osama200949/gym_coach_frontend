@@ -17,8 +17,9 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   UserProvider userProvider = UserProvider();
   DataService service = DataService();
-  String insertedEmail = "osama200949@gmail.com";
-  String insertedPassword = "123456";
+  String insertedEmail = "";
+  String insertedPassword = "";
+  GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
     final logo = Hero(
@@ -53,6 +54,16 @@ class _LoginScreenState extends State<LoginScreen> {
         contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(32.0)),
       ),
+      validator: (value) {
+        if (value == "" || value == null) {
+          return 'Please enter your email';
+        }
+        if (!RegExp(r'^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$')
+            .hasMatch(value)) {
+          return 'Please enter a valid email';
+        }
+        return null; // Validation passed
+      },
       onChanged: (value) => insertedEmail = value,
     );
 
@@ -65,7 +76,16 @@ class _LoginScreenState extends State<LoginScreen> {
         contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(32.0)),
       ),
-      onChanged: ((value) => insertedPassword = value),
+      validator: (value) {
+        if (value == "" || value == null) {
+          return 'Please enter your password';
+        }
+        if (value.length < 6) {
+          return 'Please enter a six digit password';
+        }
+        return null; // Validation passed
+      },
+      onChanged: (value) => insertedPassword = value,
     );
     final snackBar = SnackBar(
       content: const Text('Wrong credentials'),
@@ -87,27 +107,39 @@ class _LoginScreenState extends State<LoginScreen> {
                     borderRadius: BorderRadius.circular(24.0),
                     side: BorderSide(color: Colors.red)))),
         onPressed: () async {
-          final userProvider2 =
-              Provider.of<UserProvider>(context, listen: false);
-          User user =
-              await service.authenticate(insertedEmail, insertedPassword);
-          print(insertedEmail);
-          print(insertedPassword);
-          print("The email is: " + user.email);
-          if (user.email != "") {
-            print("The id is: " + user.id.toString());
-            userProvider2.set(user);
-            await storeUserToken(user.email,
-                insertedPassword); //! Stor user token in the local storage
-
-            print(userProvider2.get().name);
-            if (userProvider2.get().role == 1) {
-              Navigator.pushReplacementNamed(context, '/coachHomePage');
-            } else {
-              Navigator.pushReplacementNamed(context, '/customerHomePage');
+          if (_formKey.currentState!.validate()) {
+            // If the form is valid, display a snackbar. In the real world,
+            // you'd often call a server or save the information in a database.
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('Processing Data')),
+            );
+            final userProvider2 =
+                Provider.of<UserProvider>(context, listen: false);
+            User user =
+                await service.authenticate(insertedEmail, insertedPassword);
+            if (user.email == "") {
+              ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Wrong credentials')));
+              return;
             }
+            print(insertedEmail);
+            print(insertedPassword);
+            print("The email is: " + user.email);
+            if (user.email != "") {
+              print("The id is: " + user.id.toString());
+              userProvider2.set(user);
+              await storeUserToken(user.email,
+                  insertedPassword); //! Stor user token in the local storage
 
-            // Navigator.of(context).pushNamed('/home');
+              print(userProvider2.get().name);
+              if (userProvider2.get().role == 1) {
+                Navigator.pushReplacementNamed(context, '/coachHomePage');
+              } else {
+                Navigator.pushReplacementNamed(context, '/customerHomePage');
+              }
+
+              // Navigator.of(context).pushNamed('/home');
+            }
           } else {
             ScaffoldMessenger.of(context).showSnackBar(snackBar);
             print("wrong credentials");
@@ -137,24 +169,72 @@ class _LoginScreenState extends State<LoginScreen> {
       },
     );
 
+    final form = Form(
+      key: _formKey,
+      child: Column(
+        children: <Widget>[
+          // ... Other form fields ...
+
+          TextFormField(
+            keyboardType: TextInputType.emailAddress,
+            autofocus: false,
+            decoration: InputDecoration(
+                // ... Input decoration ...
+                ),
+            validator: (value) {
+              if (value == "" || value == null) {
+                return 'Please enter your email';
+              }
+              if (!RegExp(r'^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$')
+                  .hasMatch(value)) {
+                return 'Please enter a valid email';
+              }
+              return null; // Validation passed
+            },
+            onChanged: (value) => insertedEmail = value,
+          ),
+
+          TextFormField(
+            autofocus: false,
+            obscureText: true,
+            decoration: InputDecoration(
+                // ... Input decoration ...
+                ),
+            validator: (value) {
+              if (value == "" || value == null) {
+                return 'Please enter your password';
+              }
+              return null; // Validation passed
+            },
+            onChanged: (value) => insertedPassword = value,
+          ),
+
+          // ... Login button and other buttons ...
+        ],
+      ),
+    );
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: Center(
-        child: ListView(
-          shrinkWrap: true,
-          padding: EdgeInsets.only(left: 24.0, right: 24.0),
-          children: <Widget>[
-            logo,
-            SizedBox(height: 48.0),
-            email,
-            SizedBox(height: 8.0),
-            password,
-            SizedBox(height: 24.0),
-            loginButton,
-            SizedBox(height: 24.0),
-            customerBtn,
-            coachBtn
-          ],
+        child: Form(
+          key: _formKey,
+          child: ListView(
+            shrinkWrap: true,
+            padding: EdgeInsets.only(left: 24.0, right: 24.0),
+            children: <Widget>[
+              logo,
+              SizedBox(height: 48.0),
+              email,
+              SizedBox(height: 8.0),
+              password,
+              SizedBox(height: 24.0),
+              loginButton,
+              SizedBox(height: 24.0),
+              customerBtn,
+              coachBtn
+            ],
+          ),
         ),
       ),
     );
