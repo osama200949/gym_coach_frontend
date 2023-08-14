@@ -23,6 +23,7 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+  final _formKey = GlobalKey<FormState>();
   bool _isEditing = false;
   File? _image;
 
@@ -42,18 +43,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget build(BuildContext context) {
     final user = Provider.of<UserProvider>(context, listen: true).get();
     String name = user.name;
-    int age = user.age;
-    double height = user.height;
-    double weight = user.weight;
+    String age = user.age.toString();
+    String height = user.height.toString();
+    String weight = user.weight.toString();
     String typeOfTraining = user.typeOfTraining;
     DataService service = DataService();
     return Scaffold(
       appBar: AppBar(
         actions: [
           IconButton(
-            onPressed: () async{
+            onPressed: () async {
               service.logout(user.token);
-             await clearUserToken();
+              await clearUserToken();
               Navigator.pushReplacementNamed(context, '/login');
             },
             icon: Icon(
@@ -89,55 +90,85 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     SizedBox(height: 20),
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: 0),
-                      child: Column(
-                        children: <Widget>[
-                          TextField(
-                            controller: TextEditingController(text: user.name),
-                            decoration: InputDecoration(labelText: 'Name'),
-                            onChanged: (value) => name = value,
-                          ),
-                          TextField(
-                            controller: TextEditingController(
-                                text: user.age.toString()),
-                            decoration: InputDecoration(labelText: 'Age'),
-                            onChanged: (value) => age = int.parse(value),
-                          ),
-                          TextField(
-                            controller: TextEditingController(
-                                text: user.height.toString()),
-                            decoration: InputDecoration(labelText: 'Height'),
-                            onChanged: (value) => height = double.parse(value),
-                          ),
-                          TextField(
-                            controller: TextEditingController(
-                                text: user.weight.toString()),
-                            decoration: InputDecoration(labelText: 'Weight'),
-                            onChanged: (value) => weight = double.parse(value),
-                          ),
-                          DropdownButtonFormField<String>(
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return 'Enter type of training';
-                              }
-                              return null;
-                            },
-                            hint: Text("Type of training"),
-                            value: typeOfTraining,
-                            icon: const Icon(Icons.arrow_downward),
-                            elevation: 16,
-                            style: const TextStyle(color: Colors.deepOrange),
-                            onChanged: (String? value) {
-                              typeOfTraining = value!;
-                            },
-                            items: list
-                                .map<DropdownMenuItem<String>>((String value) {
-                              return DropdownMenuItem<String>(
-                                value: value,
-                                child: Text(value),
-                              );
-                            }).toList(),
-                          ),
-                        ],
+                      child: Form(
+                        key: _formKey,
+                        child: Column(
+                          children: <Widget>[
+                            TextFormField(
+                              validator: (value) {
+                                if (value == null || value == "") {
+                                  return "Invalid name";
+                                }
+                              },
+                              controller:
+                                  TextEditingController(text: user.name),
+                              decoration: InputDecoration(labelText: 'Name'),
+                              onChanged: (value) => name = value,
+                            ),
+                            TextFormField(
+                              validator: (value) {
+                                if (value!.isEmpty || value == null) {
+                                  return "Enter a valid age";
+                                }
+                              },
+                              keyboardType: TextInputType.numberWithOptions(
+                                  decimal: false),
+                              controller: TextEditingController(
+                                  text: user.age.toString()),
+                              decoration: InputDecoration(labelText: 'Age'),
+                              onChanged: (value) => age = value,
+                            ),
+                            TextFormField(
+                              validator: (value) {
+                                if (value!.isEmpty || value == null) {
+                                  return "Enter a valid height";
+                                }
+                              },
+                              keyboardType: TextInputType.numberWithOptions(
+                                  decimal: true),
+                              controller: TextEditingController(
+                                  text: user.height.toString()),
+                              decoration: InputDecoration(labelText: 'Height'),
+                              onChanged: (value) => height = value,
+                            ),
+                            TextFormField(
+                              validator: (value) {
+                                if (value!.isEmpty || value == null) {
+                                  return "Enter a valid weight";
+                                }
+                              },
+                              keyboardType: TextInputType.numberWithOptions(
+                                  decimal: true),
+                              controller: TextEditingController(
+                                  text: user.weight.toString()),
+                              decoration: InputDecoration(labelText: 'Weight'),
+                              onChanged: (value) => weight = value,
+                            ),
+                            DropdownButtonFormField<String>(
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'Enter type of training';
+                                }
+                                return null;
+                              },
+                              hint: Text("Type of training"),
+                              value: typeOfTraining,
+                              icon: const Icon(Icons.arrow_downward),
+                              elevation: 16,
+                              style: const TextStyle(color: Colors.deepOrange),
+                              onChanged: (String? value) {
+                                typeOfTraining = value!;
+                              },
+                              items: list.map<DropdownMenuItem<String>>(
+                                  (String value) {
+                                return DropdownMenuItem<String>(
+                                  value: value,
+                                  child: Text(value),
+                                );
+                              }).toList(),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                     SizedBox(height: 20),
@@ -146,7 +177,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         width: MediaQuery.of(context).size.width,
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
-                          // crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
                             OutlinedButton(
                               style: OutlinedButton.styleFrom(
@@ -167,28 +197,35 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             OutlinedButton(
                               onPressed: () async {
                                 // TODO: update the user data updateUser()
-                                User newUser = await service.updateUser(
-                                    User(
-                                      image: _image?.path,
-                                      name: name,
-                                      age: age,
-                                      height: height,
-                                      weight: weight,
-                                      typeOfTraining: typeOfTraining,
-                                      email: user.email, // unchanged
-                                      gender: user.gender, // unchanged
-                                      role: user.role, // unchanged
-                                      id: user.id, // unchanged
-                                      token: user.token, // unchanged
-                                    ),
-                                    user.token);
+                                if (_formKey.currentState!.validate()) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                        content: Text('Processing Data')),
+                                  );
 
-                                setState(() {
-                                  Provider.of<UserProvider>(context,
-                                          listen: false)
-                                      .set(newUser);
-                                  _isEditing = false;
-                                });
+                                  User newUser = await service.updateUser(
+                                      User(
+                                        image: _image?.path,
+                                        name: name,
+                                        age: int.parse(age),
+                                        height: double.parse(height),
+                                        weight: double.parse(weight),
+                                        typeOfTraining: typeOfTraining,
+                                        email: user.email, // unchanged
+                                        gender: user.gender, // unchanged
+                                        role: user.role, // unchanged
+                                        id: user.id, // unchanged
+                                        token: user.token, // unchanged
+                                      ),
+                                      user.token);
+
+                                  setState(() {
+                                    Provider.of<UserProvider>(context,
+                                            listen: false)
+                                        .set(newUser);
+                                    _isEditing = false;
+                                  });
+                                }
                               },
                               child: Text('Save Changes'),
                             ),

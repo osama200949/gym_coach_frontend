@@ -139,7 +139,7 @@ class _CoachCustomerScreenState extends State<CoachCustomerScreen> {
                                     String videoId =
                                         YoutubePlayer.convertUrlToId(
                                             trainings[index].video
-                                                as String) as String;
+                                                ?? "")  ?? "";
                                     String incomingDay = trainings[index].day;
 
                                     if (incomingDay == _getWeekdayName(i)) {

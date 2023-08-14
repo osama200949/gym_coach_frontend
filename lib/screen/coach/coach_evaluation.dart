@@ -83,6 +83,7 @@ class _EvaluationScreenState extends State<EvaluationScreen> {
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
           FloatingActionButton.extended(
+            heroTag: "btn-1",
               onPressed: () {
                 Navigator.pop(context);
               },
@@ -91,6 +92,7 @@ class _EvaluationScreenState extends State<EvaluationScreen> {
             width: 15,
           ),
           FloatingActionButton.extended(
+            heroTag: "btn-2",
               backgroundColor: Colors.white,
               onPressed: () async {
                 service.uploadAllThePoints(participants, user.token);

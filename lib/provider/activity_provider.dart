@@ -19,7 +19,7 @@ class ActivityProvider extends ChangeNotifier {
 
   void setParticipants(List<Customer> newCustomers) {
     customers = newCustomers;
-    notifyListeners();
+    // notifyListeners();
   }
 
   List<Customer> getParticipants(){return customers;}

@@ -13,8 +13,8 @@ import '../../provider/customer_provider.dart';
 import '../../provider/training_provider.dart';
 
 class AddNewTrainingScreen extends StatefulWidget {
- AddNewTrainingScreen({super.key});
-  
+  AddNewTrainingScreen({super.key});
+
   @override
   State<AddNewTrainingScreen> createState() => _AddNewTrainingScreenState();
 }
@@ -25,14 +25,15 @@ class _AddNewTrainingScreenState extends State<AddNewTrainingScreen> {
   final TextEditingController _videoLinkController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   // String _selectedWeekday =
-       
+
   @override
   Widget build(BuildContext context) {
     DataService service = DataService();
     final customer = Provider.of<CustomerProvider>(context, listen: true).get();
     final user = Provider.of<UserProvider>(context, listen: true).get();
-    final String weekday = Provider.of<WeekdayProvider>(context, listen: true).get();
-    
+    final String weekday =
+        Provider.of<WeekdayProvider>(context, listen: true).get();
+
     String selectedWeekDay = weekday;
     return Scaffold(
       appBar: CustomAppBar(context),
@@ -114,8 +115,11 @@ class _AddNewTrainingScreenState extends State<AddNewTrainingScreen> {
                 SizedBox(height: 10.0),
                 TextFormField(
                   validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter a video link';
+                    if (value == null ||
+                        value.isEmpty ||
+                        !RegExp(r"^(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]{11})")
+                            .hasMatch(value)) {
+                      return 'Please enter a valid YouTube video link';
                     }
                     return null;
                   },
@@ -195,36 +199,36 @@ class _AddNewTrainingScreenState extends State<AddNewTrainingScreen> {
                   child: Text('Add'),
                   onPressed: () {
                     // Validate returns true if the form is valid, or false otherwise.
-                    if (_formKey.currentState != null &&
-                        _formKey.currentState!.validate()) {
+                    if (_formKey.currentState!.validate()) {
                       // If the form is valid, display a snackbar. In the real world,
                       //
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(content: Text('Processing Data')),
                       );
+
+                      String title = _titleController.text;
+                      String description = _descriptionController.text;
+                      String videoLink = _videoLinkController.text;
+                      String weekday = selectedWeekDay;
+                      print('Title: $title');
+                      print('Description: $description');
+                      print('Video Link: $videoLink');
+                      print('Weekday: $weekday');
+                      Training training = Training(
+                          coachId: user.id,
+                          customerId: customer.id,
+                          coachName: user.name,
+                          id: 0,
+                          day: weekday,
+                          description: description,
+                          title: title,
+                          isCompleted: 0,
+                          video: videoLink);
+                      service.createNewTraining(
+                          training: training, token: user.token);
+                      Navigator.pop(context);
                     }
                     // do something with the text field values
-                    String title = _titleController.text;
-                    String description = _descriptionController.text;
-                    String videoLink = _videoLinkController.text;
-                    String weekday = selectedWeekDay;
-                    print('Title: $title');
-                    print('Description: $description');
-                    print('Video Link: $videoLink');
-                    print('Weekday: $weekday');
-                    Training training = Training(
-                        coachId: user.id,
-                        customerId: customer.id,
-                        coachName: user.name,
-                        id: 0,
-                        day: weekday,
-                        description: description,
-                        title: title,
-                        isCompleted: 0,
-                        video: videoLink);
-                    service.createNewTraining(
-                        training: training, token: user.token);
-                    Navigator.pop(context);
                   },
                 ),
               ],

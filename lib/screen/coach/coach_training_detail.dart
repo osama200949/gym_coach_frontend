@@ -186,7 +186,7 @@ class _CoachTrainingDetailScreenState extends State<CoachTrainingDetailScreen> {
                                           service.deleteTraining(
                                               id: training.id,
                                               token: user.token);
-                                          Navigator.pop(context);
+                                          Navigator.pushReplacementNamed(context, '/coachTrainingDetailPage');
                                           Navigator.pop(context);
                                         },
                                         child: Text(
@@ -216,6 +216,7 @@ class _CoachTrainingDetailScreenState extends State<CoachTrainingDetailScreen> {
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               FloatingActionButton(
+                heroTag: 'btn-1',
                 onPressed: () {
                   setState(() {
                     _isEditing == true ? _isEditing = false : _isEditing = true;
@@ -229,6 +230,7 @@ class _CoachTrainingDetailScreenState extends State<CoachTrainingDetailScreen> {
                 width: 30,
               ),
               FloatingActionButton(
+                heroTag: 'btn-2',
                 onPressed: () async {
                   await launch(training.video as String);
                 },

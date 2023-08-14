@@ -24,9 +24,8 @@ class AddNewActivityScreen extends StatefulWidget {
   State<AddNewActivityScreen> createState() => _AddNewActivityScreenState();
 }
 
-class _AddNewActivityScreenState extends State<AddNewActivityScreen>
-    with SingleTickerProviderStateMixin {
-  late AnimationController _controller;
+class _AddNewActivityScreenState extends State<AddNewActivityScreen> {
+  final _formKey = GlobalKey<FormState>();
   String title = "";
   String description = "";
   DateTime date = DateTime.now();
@@ -48,6 +47,7 @@ class _AddNewActivityScreenState extends State<AddNewActivityScreen>
 
   @override
   Widget build(BuildContext context) {
+    bool keyboardIsOpened = MediaQuery.of(context).viewInsets.bottom != 0.0;
     final activityProvider =
         Provider.of<ActivityProvider>(context, listen: true).get();
     final user = Provider.of<UserProvider>(context, listen: true).get();
@@ -101,123 +101,141 @@ class _AddNewActivityScreenState extends State<AddNewActivityScreen>
                     height: 5,
                   ),
                   Form(
+                      key: _formKey,
                       child: Column(
-                    children: [
-                      TextFormField(
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Enter your name';
-                          }
-                          return null;
-                        },
-                        keyboardType: TextInputType.name,
-                        autofocus: false,
-                        decoration: InputDecoration(
-                          // prefixIcon: Icon(FontAwesomeIcons.t),
-                          hintText: 'Title',
-                          contentPadding:
-                              EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
-                          border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(32.0)),
-                        ),
-                        onChanged: (value) => title = value,
-                      ),
-                      SizedBox(
-                        height: 15,
-                      ),
-                      TextFormField(
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Enter your name';
-                          }
-                          return null;
-                        },
-                        keyboardType: TextInputType.text,
-                        minLines: 5,
-                        maxLines: 10,
-                        autofocus: false,
-                        decoration: InputDecoration(
-                          // prefixIcon: Icon(FontAwesomeIcons.user),
-                          hintText: 'description',
-                          contentPadding:
-                              EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
-                          border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(32.0)),
-                        ),
-                        onChanged: (value) => description = value,
-                      ),
-                      SizedBox(
-                        height: 15,
-                      ),
-                      TextFormField(
-                        onTap: () {
-                          FocusManager.instance.primaryFocus?.unfocus();
-                          DatePicker.showDatePicker(context,
-                              showTitleActions: true,
-                              minTime: DateTime.now(),
-                              maxTime: DateTime(2027, 12, 25),
-                              onChanged: (newDate) {
-                            print('change $newDate');
-                            FocusManager.instance.primaryFocus?.unfocus();
-                          }, onConfirm: (newDate) {
-                            print('confirm $newDate');
-                            FocusManager.instance.primaryFocus?.unfocus();
-                            date = newDate;
-                            setState(() {});
-                          },
-                              currentTime: DateTime.now(),
-                              locale: LocaleType.en);
-                        },
-                        // keyboardType: TextInputType.datetime,
-                        autofocus: false,
-                        decoration: InputDecoration(
-                          prefixIcon: Icon(FontAwesomeIcons.calendar),
-                          hintText: date.toString().substring(0, 11),
-                          contentPadding:
-                              EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
-                          border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(32.0)),
-                        ),
-                      ),
-                    ],
-                  ))
+                        children: [
+                          TextFormField(
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Please enter a title';
+                              }
+                              return null;
+                            },
+                            keyboardType: TextInputType.name,
+                            autofocus: false,
+                            decoration: InputDecoration(
+                              // prefixIcon: Icon(FontAwesomeIcons.t),
+                              hintText: 'Title',
+                              contentPadding:
+                                  EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
+                              border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(32.0)),
+                            ),
+                            onChanged: (value) => title = value,
+                          ),
+                          SizedBox(
+                            height: 15,
+                          ),
+                          TextFormField(
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Please enter a description';
+                              }
+                              return null;
+                            },
+                            keyboardType: TextInputType.text,
+                            minLines: 5,
+                            maxLines: 10,
+                            autofocus: false,
+                            decoration: InputDecoration(
+                              // prefixIcon: Icon(FontAwesomeIcons.user),
+                              hintText: 'description',
+                              contentPadding:
+                                  EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
+                              border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(32.0)),
+                            ),
+                            onChanged: (value) => description = value,
+                          ),
+                          SizedBox(
+                            height: 15,
+                          ),
+                          TextFormField(
+                            onTap: () {
+                              FocusManager.instance.primaryFocus?.unfocus();
+                              DatePicker.showDatePicker(context,
+                                  showTitleActions: true,
+                                  minTime: DateTime.now(),
+                                  maxTime: DateTime(2027, 12, 25),
+                                  onChanged: (newDate) {
+                                print('change $newDate');
+                                FocusManager.instance.primaryFocus?.unfocus();
+                              }, onConfirm: (newDate) {
+                                print('confirm $newDate');
+                                FocusManager.instance.primaryFocus?.unfocus();
+                                date = newDate;
+                                setState(() {});
+                              },
+                                  currentTime: DateTime.now(),
+                                  locale: LocaleType.en);
+                            },
+                            // keyboardType: TextInputType.datetime,
+                            autofocus: false,
+                            decoration: InputDecoration(
+                              prefixIcon: Icon(FontAwesomeIcons.calendar),
+                              hintText: date.toString().substring(0, 11),
+                              contentPadding:
+                                  EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
+                              border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(32.0)),
+                            ),
+                          ),
+                        ],
+                      ))
                 ],
               ),
             ),
           ],
         ),
       ),
-      floatingActionButton: Row(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          FloatingActionButton.extended(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              label: Text('Cancel')),
-          SizedBox(
-            width: 15,
-          ),
-          FloatingActionButton.extended(
-              backgroundColor: Colors.white,
-              onPressed: () async {
-                await service.createNewActivity(
-                    Activity(
-                        coachId: user.id,
-                        coachName: user.name,
-                        date: date,
-                        description: description,
-                        image: _image?.path,
-                        title: title),
-                    user.token);
-                Navigator.pop(context);
-              },
-              label: Text(
-                'Create new activity',
-                style: TextStyle(color: Colors.deepOrange),
-              )),
-        ],
-      ),
+      floatingActionButton: !keyboardIsOpened
+          ? Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                FloatingActionButton.extended(
+                    heroTag: "btn-1",
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    label: Text('Cancel')),
+                SizedBox(
+                  width: 15,
+                ),
+                FloatingActionButton.extended(
+                    heroTag: "btn-2",
+                    backgroundColor: Colors.white,
+                    onPressed: () async {
+                      if (_formKey.currentState!.validate()) {
+                        if (_image?.path == null) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                                content: Text('Please insert an image')),
+                          );
+                          return;
+                        }
+
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text('Processing Data')),
+                        );
+                        await service.createNewActivity(
+                            Activity(
+                                coachId: user.id,
+                                coachName: user.name,
+                                date: date,
+                                description: description,
+                                image: _image?.path,
+                                title: title),
+                            user.token);
+                        Navigator.pop(context);
+                      }
+                    },
+                    label: Text(
+                      'Create new activity',
+                      style: TextStyle(color: Colors.deepOrange),
+                    )),
+              ],
+            )
+          : null,
     );
   }
 }
