@@ -1,4 +1,4 @@
-package com.osama.gym_coach
+package com.osama.gymCoach
 
 import io.flutter.embedding.android.FlutterActivity
 
