@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
+// import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:todo_list/models/training.dart';
@@ -28,7 +28,8 @@ class _AddNewActivityScreenState extends State<AddNewActivityScreen> {
   final _formKey = GlobalKey<FormState>();
   String title = "";
   String description = "";
-  DateTime date = DateTime.now();
+  // DateTime date = DateTime.now();
+  DateTime selectedDate = DateTime.now();
   String coachName = "";
   String coachId = "";
   File? _image;
@@ -43,6 +44,20 @@ class _AddNewActivityScreenState extends State<AddNewActivityScreen> {
         _image = File(result.files.single.path!);
       });
     }
+  }
+
+
+  Future<void> _selectDate(BuildContext context) async {
+    final picked = await showDatePicker(
+      context: context,
+      initialDate: selectedDate,
+      firstDate: DateTime.now(),
+      lastDate: DateTime(2027, 12, 31), // You can adjust this range
+    );
+    if (picked != null && picked != selectedDate)
+      setState(() {
+        selectedDate = picked;
+      });
   }
 
   @override
@@ -151,33 +166,18 @@ class _AddNewActivityScreenState extends State<AddNewActivityScreen> {
                             height: 15,
                           ),
                           TextFormField(
-                            onTap: () {
-                              FocusManager.instance.primaryFocus?.unfocus();
-                              DatePicker.showDatePicker(context,
-                                  showTitleActions: true,
-                                  minTime: DateTime.now(),
-                                  maxTime: DateTime(2027, 12, 25),
-                                  onChanged: (newDate) {
-                                print('change $newDate');
-                                FocusManager.instance.primaryFocus?.unfocus();
-                              }, onConfirm: (newDate) {
-                                print('confirm $newDate');
-                                FocusManager.instance.primaryFocus?.unfocus();
-                                date = newDate;
-                                setState(() {});
-                              },
-                                  currentTime: DateTime.now(),
-                                  locale: LocaleType.en);
-                            },
-                            // keyboardType: TextInputType.datetime,
+                            onTap: () => _selectDate(context),
+                            readOnly: true,
                             autofocus: false,
                             decoration: InputDecoration(
                               prefixIcon: Icon(FontAwesomeIcons.calendar),
-                              hintText: date.toString().substring(0, 11),
+                              hintText:
+                                  "${selectedDate.toLocal()}".split(' ')[0],
                               contentPadding:
                                   EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
                               border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(32.0)),
+                                borderRadius: BorderRadius.circular(32.0),
+                              ),
                             ),
                           ),
                         ],
@@ -221,7 +221,7 @@ class _AddNewActivityScreenState extends State<AddNewActivityScreen> {
                             Activity(
                                 coachId: user.id,
                                 coachName: user.name,
-                                date: date,
+                                date: selectedDate,
                                 description: description,
                                 image: _image?.path,
                                 title: title),
